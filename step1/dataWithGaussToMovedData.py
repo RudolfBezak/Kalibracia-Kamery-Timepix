@@ -1,6 +1,3 @@
-import matplotlib.pyplot as plt
-import numpy as np
-from astropy import modeling
 from globals import MAX_TOT
 
 middle = 22
@@ -9,10 +6,6 @@ high = 35
 
 inputFile = f"calibrationDataWithGauss.rudolf"
 outputFile = f"calibrationDataWithGaussMoved.rudolf"
-
-riadokNaProgress = 0
-patpercent = round((256*256)/20)
-progress = 0
 
 file = open(inputFile, 'r', encoding='utf-8')
 outputFile = open(outputFile, 'w', encoding='utf-8')
