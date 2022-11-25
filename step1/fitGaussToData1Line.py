@@ -9,7 +9,7 @@ inputFile = f"calibrationData.rudolf"
 
 riadokNaVypis = int(input("ktory riadok: "))
 
-arraySpocitany = 0
+arrayRiadok = 0
 riadokCislo = 0
 
 file = open(inputFile, 'r', encoding='utf-8')
@@ -18,23 +18,23 @@ for riadok in file:
   if (riadokCislo == riadokNaVypis):
     riadok = riadok.strip()
     riadok = riadok.split(" ")
-    arraySpocitany = riadok
+    arrayRiadok = riadok
 
-print(arraySpocitany)
-for i in range(len(arraySpocitany)):
-  arraySpocitany[i] = int(arraySpocitany[i])
+print(arrayRiadok)
+for i in range(len(arrayRiadok)):
+  arrayRiadok[i] = int(arrayRiadok[i])
 
 
 x = np.linspace(0, MAX_TOT, MAX_TOT)
-y = np.array(arraySpocitany)
+y = np.array(arrayRiadok)
 
 
 fitter = modeling.fitting.LevMarLSQFitter()
 model = modeling.models.Gaussian1D()   # depending on the data you need to give some initial values
-fitted_model = fitter(model, x, arraySpocitany)
+fitted_model = fitter(model, x, arrayRiadok)
 print("výška", fitted_model.parameters[0])
 print("stred", fitted_model.parameters[1])
-print("tretia picovina", fitted_model.parameters[2])
+print("tretia hodnota", fitted_model.parameters[2])
 
 plt.title("Line graph")
 plt.xlabel("X axis")
