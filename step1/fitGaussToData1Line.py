@@ -20,6 +20,8 @@ for riadok in file:
     riadok = riadok.split(" ")
     arrayRiadok = riadok
 
+file.close()
+
 print(arrayRiadok)
 for i in range(len(arrayRiadok)):
   arrayRiadok[i] = int(arrayRiadok[i])
@@ -30,11 +32,12 @@ y = np.array(arrayRiadok)
 
 
 fitter = modeling.fitting.LevMarLSQFitter()
-model = modeling.models.Gaussian1D()   # depending on the data you need to give some initial values
+model = modeling.models.Gaussian1D()   # do zatvorky (amplitude, mean, stddev) https://docs.astropy.org/en/stable/modeling/fitting.html
 fitted_model = fitter(model, x, arrayRiadok)
 print("výška", fitted_model.parameters[0])
 print("stred", fitted_model.parameters[1])
 print("tretia hodnota", fitted_model.parameters[2])
+print(fitted_model)
 
 plt.title("Line graph")
 plt.xlabel("X axis")

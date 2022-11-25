@@ -13,6 +13,8 @@ for riadok in file:
   riadok = riadok.split(" ")
   arraySpocitany = riadok
 
+file.close()
+
 print(arraySpocitany)
 for i in range(len(arraySpocitany)):
   arraySpocitany[i] = int(arraySpocitany[i])
