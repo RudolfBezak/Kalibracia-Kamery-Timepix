@@ -20,7 +20,7 @@ for riadok in file:
   for i in range(len(arrayRiadok)):
     arrayRiadok[i] = round(float(arrayRiadok[i]))
 
-  pocetParametrov = int(arrayRiadok[i])
+  pocetParametrov = int(arrayRiadok[0])
   stred = int(arrayRiadok[2])
 
   #najdeny 1. peak
@@ -30,13 +30,13 @@ for riadok in file:
     #posun doprava
     if posunOPocetDoprava >= 0:
       for index in range(MAX_TOT - posunOPocetDoprava):
-        riadokNaZapis[index + posunOPocetDoprava] = arrayRiadok[index + 4]
+        riadokNaZapis[index + posunOPocetDoprava] = arrayRiadok[index + 1 + pocetParametrov]
         
 
     #posun dolava
     if posunOPocetDoprava < 0:
       for index in range(MAX_TOT - (-posunOPocetDoprava)):
-        riadokNaZapis[index] = arrayRiadok[index + posunOPocetDoprava + 4]
+        riadokNaZapis[index] = arrayRiadok[index - posunOPocetDoprava + 1 + pocetParametrov]
 
 
     #zapis do suboru
