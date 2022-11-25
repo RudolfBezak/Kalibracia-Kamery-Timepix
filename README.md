@@ -1,2 +1,2 @@
-Najprv si tam hod data
+Najprv si tam hod data <br/>
 potom zbehni rawDataToCalibrationData.py
