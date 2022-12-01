@@ -4,8 +4,9 @@ from astropy import modeling
 
 from globals import MAX_TOT
 
-# inputFile = f"summedCalibrationData.rudolf"
-inputFile = f"calibrationData.rudolf"
+# inputFile = f"summedCalibrationData2.rudolf"
+# inputFile = f"calibrationData2.rudolf"
+inputFile = f"summedMovedDataWithGauss2.rudolf"
 
 riadokNaVypis = int(input("ktory riadok: "))
 

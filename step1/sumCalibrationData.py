@@ -1,11 +1,11 @@
 
 from globals import MAX_TOT
 
-# inputFile = f"calibrationData.rudolf"
-# outputFile = f"summedCalibrationData.rudolf"
+# inputFile = f"calibrationData2.rudolf"
+# outputFile = f"summedCalibrationData2.rudolf"
 
-inputFile = f"calibrationDataWithGaussMoved.rudolf"
-outputFile = f"summedCalibrationDataWithGauss.rudolf"
+inputFile = f"calibrationDataWithGaussMoved2.rudolf"
+outputFile = f"summedMovedDataWithGauss2.rudolf"
 
 # spocita vsetky riadky a vrati array 1xMAX_TOT
 def sumCalibrationData(input):

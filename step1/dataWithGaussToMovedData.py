@@ -2,10 +2,10 @@ from globals import MAX_TOT
 
 middle = 22
 low = 15
-high = 35
+high = 60
 
-inputFile = f"calibrationDataWithGauss.rudolf"
-outputFile = f"calibrationDataWithGaussMoved.rudolf"
+inputFile = f"calibrationDataWithGauss2.rudolf"
+outputFile = f"calibrationDataWithGaussMoved2.rudolf"
 
 file = open(inputFile, 'r', encoding='utf-8')
 outputFile = open(outputFile, 'w', encoding='utf-8')

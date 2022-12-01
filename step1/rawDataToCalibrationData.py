@@ -6,8 +6,9 @@ from globals import MAX_TOT
 VELKOST_CLUSTERA = 1
 PERCENT_VYPIS = 5
 
-inputFile = f"./SiCTPX3/SiC_200V_241Am.clog"
-outputFile = f"calibrationData.rudolf"
+# inputFile = f"./SiCTPX3/SiC_200V_241Am.clog"
+inputFile = f"./SiCTPX3/SiCTPX3L06-InRTG40kV100uA.clog"
+outputFile = f"calibrationData2.rudolf"
 # fileAdress = f"input.clog"
 
 pocetRiadkov = countLines(inputFile)

@@ -4,8 +4,8 @@ from astropy import modeling
 from globals import MAX_TOT
 
 # inputFile = f"summedCalibrationData.rudolf"
-inputFile = f"calibrationData.rudolf"
-outputFile = f"calibrationDataWithGauss.rudolf"
+inputFile = f"calibrationData2.rudolf"
+outputFile = f"calibrationDataWithGauss2.rudolf"
 
 riadokNaProgress = 0
 patpercent = round((256*256)/20)
