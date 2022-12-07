@@ -6,10 +6,12 @@ from globals import MAX_TOT
 VELKOST_CLUSTERA = 1
 PERCENT_VYPIS = 5
 
-# inputFile = f"./SiCTPX3/SiC_200V_241Am.clog"
-inputFile = f"./SiCTPX3/SiCTPX3L06-InRTG40kV100uA.clog"
-outputFile = f"calibrationData2.rudolf"
+inputFile = f"./SiCTPX3/SiCTPX3L06-GeRTG40kV100uA.clog"
+# inputFile = f"./SiCTPX3/SiCTPX3L06-InRTG40kV100uA.clog"
+outputFile = f"calibrationData.rudolf"
 # fileAdress = f"input.clog"
+
+print("start")
 
 pocetRiadkov = countLines(inputFile)
 print("subor ma",pocetRiadkov,"riadkov")
@@ -27,6 +29,7 @@ def toCalibration(fileAdress):
   # prejdi vsetky riadky
   print("start raw -> array")
   for line in file:
+    # print(line)
     if (riadokNaProgress == pocetRiadkovNaPercenta):
       riadokNaProgress = 0
       percenta = percenta + 5

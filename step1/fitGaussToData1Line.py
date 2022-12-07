@@ -5,13 +5,15 @@ from astropy import modeling
 from globals import MAX_TOT
 
 # inputFile = f"summedCalibrationData2.rudolf"
-# inputFile = f"calibrationData2.rudolf"
-inputFile = f"summedMovedDataWithGauss2.rudolf"
+inputFile = f"calibrationData.rudolf"
+# inputFile = f"summedMovedDataWithGauss2.rudolf"
+# inputFile = f"testData.rudolf"
 
 riadokNaVypis = int(input("ktory riadok: "))
 
 arrayRiadok = 0
 riadokCislo = 0
+pocetHodnot = 0
 
 file = open(inputFile, 'r', encoding='utf-8')
 for riadok in file:
@@ -20,6 +22,8 @@ for riadok in file:
     riadok = riadok.strip()
     riadok = riadok.split(" ")
     arrayRiadok = riadok
+    pocetHodnot = len(arrayRiadok)
+    break
 
 file.close()
 
@@ -28,7 +32,7 @@ for i in range(len(arrayRiadok)):
   arrayRiadok[i] = int(arrayRiadok[i])
 
 
-x = np.linspace(0, MAX_TOT, MAX_TOT)
+x = np.linspace(0, pocetHodnot, pocetHodnot)
 y = np.array(arrayRiadok)
 
 
