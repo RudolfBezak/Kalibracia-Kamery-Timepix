@@ -1,8 +1,6 @@
 from globals import MAX_TOT
 
-kolkoPozeram = 6
-
-
+kolkoPozeram = 1
 
 def funkcia(): 
 
@@ -12,7 +10,6 @@ def funkcia():
   if kolkoPozeram <= 0:
     print("zle cislo")
     return
-
 
   print("alokacia",256*256,"x",MAX_TOT,"pola")
   result = [[0]*MAX_TOT for i in range(256*256)]
@@ -35,7 +32,7 @@ def funkcia():
       sum = 0
       if i >= kolkoPozeram and i+kolkoPozeram < MAX_TOT:
         for y in range((kolkoPozeram*2)+1):
-          sum = arrayRiadok[-kolkoPozeram+y+i]
+          sum += arrayRiadok[-kolkoPozeram+y+i]
         result[riadokCislo][i] = round(sum/((kolkoPozeram*2)+1))
     
     riadokCislo += 1

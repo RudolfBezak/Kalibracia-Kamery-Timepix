@@ -6,7 +6,7 @@ from globals import MAX_TOT
 # inputFile = f"calibrationData.rudolf"
 # inputFile = f"summedCalibrationData.rudolf"
 # inputFile = f"summedMovedDataWithGauss2.rudolf"
-inputFile = f"calibrationDataUhladene6.rudolf"
+inputFile = f"calibrationDataUhladene1.rudolf"
 
 arraySpocitany = 0
 
