@@ -12,7 +12,7 @@ patpercent = round((256*256)/20)
 progress = 0
 
 file = open(inputFile, 'r', encoding='utf-8')
-outputFile = open(outputFile, 'w', encoding='utf-8')
+
 print("start")
 for riadok in file:
   riadok = riadok.strip()
@@ -36,6 +36,7 @@ for riadok in file:
   model = modeling.models.Gaussian1D()   # depending on the data you need to give some initial values
   fitted_model = fitter(model, x, arrayRiadok)
 
+  outputFile = open(outputFile, 'w', encoding='utf-8')
   outputFile.write("3 ")
   outputFile.write(str(round(fitted_model.parameters[0], 2)))
   outputFile.write(" ")

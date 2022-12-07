@@ -3,9 +3,10 @@ import numpy as np
 
 from globals import MAX_TOT
 
-inputFile = f"calibrationData.rudolf"
+# inputFile = f"calibrationData.rudolf"
 # inputFile = f"summedCalibrationData.rudolf"
 # inputFile = f"summedMovedDataWithGauss2.rudolf"
+inputFile = f"calibrationDataUhladene6.rudolf"
 
 arraySpocitany = 0
 
