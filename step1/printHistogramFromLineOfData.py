@@ -4,9 +4,9 @@ import numpy as np
 from globals import MAX_TOT
 
 # inputFile = f"calibrationData.rudolf"
-# inputFile = f"summedCalibrationData.rudolf"
-# inputFile = f"summedMovedDataWithGauss2.rudolf"
-inputFile = f"calibrationDataUhladene1.rudolf"
+inputFile = f"summedCalibrationData.rudolf"
+# inputFile = f"summedMovedDataWithGauss.rudolf"
+# inputFile = f"calibrationDataUhladene1.rudolf"
 
 arraySpocitany = 0
 
