@@ -12,4 +12,4 @@ def merge_files(input_files, output_file):
                     f_out.write(" ")
             f_out.write("\n")
 
-merge_files(["gerGauss.rudolf", "amGauss.rudolf", "indGauss.rudolf"], "allGauss.rudolf")
+merge_files(["gerGauss.rudolf", "amMaxPeak1.rudolf", "indGauss.rudolf", "amMaxPeak2.rudolf"], "allGauss.rudolf")

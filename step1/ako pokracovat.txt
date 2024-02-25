@@ -1,0 +1,2 @@
+kalibracne krivky per pixel
+pzoriet https://wiki.advacam.cz/wiki/DPE#Download

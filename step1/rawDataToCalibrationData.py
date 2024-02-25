@@ -6,7 +6,7 @@ from globals import MAX_TOT
 VELKOST_CLUSTERA = 1
 PERCENT_VYPIS = 5
 
-inputFile = f"./SiCTPX3/SiCTPX3L06-GeRTG40kV100uA.clog"
+inputFile = f"step1\SiCTPX3\Cu.clog"
 # inputFile = f"./SiCTPX3/SiCTPX3L06-InRTG40kV100uA.clog"
 outputFile = f"calibrationData.rudolf"
 # fileAdress = f"input.clog"

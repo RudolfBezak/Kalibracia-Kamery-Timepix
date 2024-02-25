@@ -8,6 +8,7 @@ from globals import MAX_TOT
 inputFile = f"calibrationData.rudolf"
 # inputFile = f"summedMovedDataWithGauss2.rudolf"
 # inputFile = f"testData.rudolf"
+# inputFile = f"calibrationDataUhladene1.rudolf"
 
 riadokNaVypis = int(input("ktory riadok: "))
 

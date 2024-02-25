@@ -1,6 +1,6 @@
 from globals import MAX_TOT
 
-kolkoPozeram = 1
+kolkoPozeram = 2
 
 def funkcia(): 
 
