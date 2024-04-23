@@ -3,8 +3,7 @@ import numpy as np
 
 from globals import MAX_TOT
 
-inputFile = f"step1\calibrationData.rudolf"
-# inputFile = f"calibrationDataUhladene2.rudolf"
+inputFile = f"calibrationData.rudolf"
 # inputFile = f"summedCalibrationData.rudolf"
 # inputFile = f"summedMovedDataWithGauss.rudolf"
 # inputFile = f"calibrationDataUhladene1.rudolf"
@@ -31,9 +30,8 @@ for i in range(len(arraySpocitany)):
 
 x = np.arange(1, MAX_TOT+1)
 y = np.array(arraySpocitany)
-
 plt.title("Line graph")
-plt.xlabel("X axis")
-plt.ylabel("Y axis")
+plt.xlabel("TOT")
+plt.ylabel("count")
 plt.plot(x, y, color ="red")
 plt.show()
