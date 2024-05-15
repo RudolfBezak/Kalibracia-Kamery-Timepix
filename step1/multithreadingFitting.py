@@ -32,7 +32,7 @@ def process_line(riadok):
     
     riadok.insert(0, 0)
     y_data = np.array(riadok)
-    params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([-np.inf, -np.inf, -np.inf, 0], [np.inf, np.inf, np.inf, np.inf]))
+    params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([-np.inf, -np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf, 6]))
     arrayA[tentoRiadokCislo] = params[0]
     arrayB[tentoRiadokCislo] = params[1]
     arrayC[tentoRiadokCislo] = params[2]

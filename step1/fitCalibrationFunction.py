@@ -52,26 +52,73 @@ def custom_function(x, a, b, c, t):
 # filec.close()
 # filet.close()
 
-x_data = np.array([6, 13.8, 17.7, 20.7, 59.5]) #17.7, 20.7, 26.3, 59.5 / 13.8, 17.7, 20.7, 59.5
 
-y_data = np.array([0, 15, 20, 25, 65]) # 19, 23, 28, 67 /
+x_data = np.array([6, 17.7, 20.7, 26.3, 59.5]) #17.7, 20.7, 26.3, 59.5 / 13.8, 17.7, 20.7, 59.5
+y_data = np.array([0, 19, 230, 28, 67]) # 19, 230, 28, 67 /
 
 # Fit the function to the data
-params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([-np.inf, -np.inf, -np.inf, 0], [np.inf, np.inf, np.inf, np.inf]))
+params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([-np.inf, -np.inf, -np.inf, 0], [np.inf, np.inf, np.inf, 6]))
 
 # Generate points on the fitted curve for smooth plotting
 x_fit = np.linspace(min(x_data), max(x_data), 100)
 y_fit = custom_function(x_fit, *params)
-# params = (0.922772, 11.90094, 34.002393, 4.050051)
-# y_fit2 = custom_function(x_fit, *params)
+params = (-2.903282355458918, 8958.744464272246, 18405343.937474344, -2052.4187561429676)
+y_fit2 = custom_function(x_fit, *params)
 print(params)
 
 # Plot the data points and the fitted curve
-plt.plot(x_fit, y_fit, label='Custom Function Fit', color='red')
-# plt.plot(x_fit, y_fit2, label='Ich Function Fit', color='green')
+plt.plot(x_fit, y_fit2, label='Krivka 1', color='red')
 
-plt.scatter(x_data, y_data, label='Data Points')
-plt.xlabel('Energy (KeV)')
+# x_data = np.array([6, 17.7, 20.7, 26.3, 59.5]) #17.7, 20.7, 26.3, 59.5 / 13.8, 17.7, 20.7, 59.5
+# y_data = np.array([0, 21, 28, 34, 80]) # 19, 23, 28, 67 / 17, 22, 24, 64
+
+# # Fit the function to the data
+# params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([-np.inf, -np.inf, -np.inf, 0], [np.inf, np.inf, np.inf, 6]))
+
+# # Generate points on the fitted curve for smooth plotting
+# x_fit = np.linspace(min(x_data), max(x_data), 100)
+# y_fit = custom_function(x_fit, *params)
+# params = (0, 0, 0, 4.050051)
+# # y_fit2 = custom_function(x_fit, *params)
+# print(params)
+
+# Plot the data points and the fitted curve
+# plt.plot(x_fit, y_fit, label='Krivka 2', color='blue')
+
+# x_data = np.array([6, 13.8, 17.7, 20.7, 59.5]) #17.7, 20.7, 26.3, 59.5 / 13.8, 17.7, 20.7, 59.5
+# y_data = np.array([0, 17, 22, 27, 64,]) # 19, 23, 28, 67 /
+
+# # Fit the function to the data
+# params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([-np.inf, -np.inf, -np.inf, 2], [np.inf, np.inf, np.inf, 6]))
+
+# # Generate points on the fitted curve for smooth plotting
+# x_fit = np.linspace(min(x_data), max(x_data), 100)
+# y_fit = custom_function(x_fit, *params)
+# # params = (0.922772, 11.90094, 34.002393, 4.050051)
+# # y_fit2 = custom_function(x_fit, *params)
+# print(params)
+
+# # Plot the data points and the fitted curve
+# plt.plot(x_fit, y_fit, label='Krivka 3', color='purple')
+
+# x_data = np.array([6, 13.8, 17.7, 20.7, 59.5]) #17.7, 20.7, 26.3, 59.5 / 13.8, 17.7, 20.7, 59.5
+# y_data = np.array([0, 18, 24, 28, 74]) # 19, 23, 28, 67 /
+
+# # Fit the function to the data
+# params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([-np.inf, -np.inf, -np.inf, 0], [np.inf, np.inf, np.inf, 6]))
+
+# # Generate points on the fitted curve for smooth plotting
+# x_fit = np.linspace(min(x_data), max(x_data), 100)
+# y_fit = custom_function(x_fit, *params)
+# # params = (0.922772, 11.90094, 34.002393, 4.050051)
+# # y_fit2 = custom_function(x_fit, *params)
+# print(params)
+
+# Plot the data points and the fitted curve
+# plt.plot(x_fit, y_fit, label='Krivka 4', color='green')
+
+# plt.scatter(x_data, y_data, label='Data Points')
+plt.xlabel('Energia (KeV)')
 plt.ylabel('ToT (ADU)')
 plt.legend()
 plt.show()
