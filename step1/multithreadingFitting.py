@@ -2,6 +2,8 @@ import numpy as np
 from scipy.optimize import curve_fit
 import concurrent.futures
 
+from globals import TRESHOLD
+
 inputFile = "am4peaks.rudolf"
 outputFilea = "calib_a.txt"
 outputFileb = "calib_b.txt"
@@ -32,7 +34,7 @@ def process_line(riadok):
     
     riadok.insert(0, 0)
     y_data = np.array(riadok)
-    params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([-np.inf, -np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf, 6]))
+    params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([-np.inf, -np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf, TRESHOLD]))
     arrayA[tentoRiadokCislo] = params[0]
     arrayB[tentoRiadokCislo] = params[1]
     arrayC[tentoRiadokCislo] = params[2]
