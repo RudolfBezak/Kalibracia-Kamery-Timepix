@@ -8,24 +8,31 @@ outputFile = f"summedCalibrationData.rudolf"
 # outputFile = f"summedMovedDataWithGauss2.rudolf"
 
 # spocita vsetky riadky a vrati array 1xMAX_TOT
-def sumCalibrationData(input):
+def sumCalibrationData(input, pole = False):
   print("start")
 
-  file = open(input, 'r', encoding='utf-8')
+  if pole:
+    result = [0]*len(input[0])
+    for i in range(len(input[0])):
+      for j in range(len(input[i])):
+        result[i] += int(input[j][i])
 
-  result = [0]*MAX_TOT
-  
+  else: 
+    file = open(input, 'r', encoding='utf-8')
 
-  # pre kazdy riadok
-  for riadok in file:
-    riadok = riadok.strip()
-    riadok = riadok.split(" ")
-    indexDat = 0
-    for data in riadok:
-      result[indexDat] += int(data)
-      indexDat += 1
+    result = [0]*MAX_TOT
+    
 
-  file.close()
+    # pre kazdy riadok
+    for riadok in file:
+      riadok = riadok.strip()
+      riadok = riadok.split(" ")
+      indexDat = 0
+      for data in riadok:
+        result[indexDat] += int(data)
+        indexDat += 1
+
+    file.close()
 
   return result
 
@@ -40,5 +47,5 @@ def writeToFile(array):
 
   return
 
-writeToFile(sumCalibrationData(inputFile))
-print("done")
+# writeToFile(sumCalibrationData(inputFile))
+# print("done")

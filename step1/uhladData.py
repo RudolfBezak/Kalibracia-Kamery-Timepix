@@ -1,4 +1,4 @@
-from globals import MAX_TOT
+from globals import MAX_TOT, RESOLUTION
 
 kolkoPozeram = 2
 
@@ -11,8 +11,8 @@ def funkcia():
     print("zle cislo")
     return
 
-  print("alokacia",256*256,"x",MAX_TOT,"pola")
-  result = [[0]*MAX_TOT for i in range(256*256)]
+  print("alokacia",RESOLUTION*RESOLUTION,"x",MAX_TOT,"pola")
+  result = [[0]*MAX_TOT for i in range(RESOLUTION*RESOLUTION)]
 
   file = open(inputFile, 'r', encoding='utf-8')
 

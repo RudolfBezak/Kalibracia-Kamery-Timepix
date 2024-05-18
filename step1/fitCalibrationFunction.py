@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
 
+from globals import RESOLUTION
+
 # inputFile = f"am4peaks.rudolf"
 # outputFilea = f"calib_a.txt"
 # outputFileb = f"calib_b.txt"
@@ -37,7 +39,7 @@ def custom_function(x, a, b, c, t):
 #     fileb.write(str(params[1]) + " ")
 #     filec.write(str(params[2]) + " ")
 #     filet.write(str(params[3]) + " ")
-#     if (riadokCislo == 256):
+#     if (riadokCislo == RESOLUTION):
 #         riadokCislo = 0
 #         percenta = percenta + 0.4
 #         print(percenta,"%")

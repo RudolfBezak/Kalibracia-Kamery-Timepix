@@ -1,11 +1,13 @@
 import tkinter as tk
 from tkinter import filedialog
+from americium4peaky import americium4peaky
 from custom_function import custom_function
+import printHistogramCalibrated
 import rawDataToCalibrationData
-import printHistogramFromLineOfData
+import printHistogram
 import matplotlib.pyplot as plt
 import numpy as np
-from globals import MAX_TOT, TRESHOLD
+from globals import MAX_TOT, RESOLUTION, TRESHOLD
 
 class Application(tk.Frame):
 
@@ -78,6 +80,43 @@ class Application(tk.Frame):
         new_app.rawDataWidget()
         new_app.mainloop()
 
+    def vytvorMiestoNaCalibSubory(self):
+          self.file_text = tk.Label(self, text="calib_a.txt súbor:")
+          self.file_text.grid(row=self.i, column=0)
+        
+          # Create a label for displaying the dropped file name
+          self.file_labela = tk.Label(self, text="zadaj sem calib_a subor")
+          self.file_labela.grid(row=self.i, column=2)
+
+          self.file_labela.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labela))
+
+          self.file_text = tk.Label(self, text="calib_b.txt súbor:")
+          self.file_text.grid(row=self.i+1, column=0)
+
+          # Create a label for displaying the dropped file name
+          self.file_labelb = tk.Label(self, text="zadaj sem calib_b subor")
+          self.file_labelb.grid(row=self.i+1, column=2)
+
+          self.file_labelb.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labelb))
+
+          self.file_text1 = tk.Label(self, text="calib_c.txt súbor:")
+          self.file_text1.grid(row=self.i+2, column=0)
+
+          # Create a label for displaying the dropped file name
+          self.file_labelc = tk.Label(self, text="zadaj sem calib_c subor")
+          self.file_labelc.grid(row=self.i+2, column=2)
+
+          self.file_labelc.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labelc))
+
+          self.file_text1 = tk.Label(self, text="calib_t.txt súbor:")
+          self.file_text1.grid(row=self.i+3, column=0)
+
+          # Create a label for displaying the dropped file name
+          self.file_labelt = tk.Label(self, text="zadaj sem calib_t subor")
+          self.file_labelt.grid(row=self.i+3, column=2)
+
+          self.file_labelt.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labelt))
+
     def histogramWidget(self):
         self.topRow()
         self.i = 3
@@ -98,68 +137,43 @@ class Application(tk.Frame):
         self.text_entrypixel = tk.Entry(self)
         self.text_entrypixel.grid(row=self.i+1, column=2)
 
-        self.vykresliButton = tk.Button(self, text='vykresli', command=self.vykresliKalibButtonOnClick)
-        self.vykresliButton.grid(row=self.i+2, column=1)  # Specify the row and column for the button
+        self.i = self.i+7
+
+        self.vytvorMiestoNaCalibSubory()
+
+
+        self.vykresliButton = tk.Button(self, text='vykresli', command=lambda: self.vykresliHistogramButtonOnClick(False))
+        self.vykresliButton.grid(row=self.i+4, column=1)  # Specify the row and column for the button
+
+        self.vykresliVsetkoButton = tk.Button(self, text='vykresli s porovnanim', command=lambda: self.vykresliHistogramButtonOnClick(True))
+        self.vykresliVsetkoButton.grid(row=self.i+4, column=2)  # Specify the row and column for the button
 
         self.file_text2 = tk.Label(self)
-        self.file_text2.grid(row=self.i+3, column=1)
+        self.file_text2.grid(row=self.i+5, column=1)
 
-        self.i = self.i+5
+        self.i = self.i+6
 
         self.file_text2 = tk.Label(self, text="Kalibračné krivky")
         self.file_text2.grid(row=self.i-1, column=1)
-        self.file_text = tk.Label(self, text="calib_a.txt súbor:")
-        self.file_text.grid(row=self.i, column=0)
-
-        # Create a label for displaying the dropped file name
-        self.file_labela = tk.Label(self, text="zadaj sem calib_a subor")
-        self.file_labela.grid(row=self.i, column=2)
-
-        self.file_labela.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labela))
-
-        self.file_text = tk.Label(self, text="calib_b.txt súbor:")
-        self.file_text.grid(row=self.i+1, column=0)
-
-        # Create a label for displaying the dropped file name
-        self.file_labelb = tk.Label(self, text="zadaj sem calib_b subor")
-        self.file_labelb.grid(row=self.i+1, column=2)
-
-        self.file_labelb.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labelb))
-
-        self.file_text1 = tk.Label(self, text="calib_c.txt súbor:")
-        self.file_text1.grid(row=self.i+2, column=0)
-
-        # Create a label for displaying the dropped file name
-        self.file_labelc = tk.Label(self, text="zadaj sem calib_c subor")
-        self.file_labelc.grid(row=self.i+2, column=2)
-
-        self.file_labelc.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labelc))
-
-        self.file_text1 = tk.Label(self, text="calib_t.txt súbor:")
-        self.file_text1.grid(row=self.i+3, column=0)
-
-        # Create a label for displaying the dropped file name
-        self.file_labelt = tk.Label(self, text="zadaj sem calib_t subor")
-        self.file_labelt.grid(row=self.i+3, column=2)
-
-        self.file_labelt.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labelt))
+        # self.vytvorMiestoNaCalibSubory()
+        # self.i = self.i+4
 
         self.file_text1 = tk.Label(self, text="číslo pixela:	")
-        self.file_text1.grid(row=self.i+4, column=0)
+        self.file_text1.grid(row=self.i, column=0)
 
         self.pixely = []
         self.text_entry = tk.Entry(self)
-        self.text_entry.grid(row=self.i+4, column=2)
+        self.text_entry.grid(row=self.i, column=2)
         self.pixely.append(self.text_entry)
   
         self.addButton = tk.Button(self, text='dalsi pixel', command=self.pridajRadKalibracnychKriviek)
-        self.addButton.grid(row=self.i+5, column=0)
+        self.addButton.grid(row=self.i+1, column=0)
 
         self.vykresliButton = tk.Button(self, text='vykresli', command=self.vykresliKalibKrivkyButtonOnClick)
-        self.vykresliButton.grid(row=self.i+5, column=1)  # Specify the row and column for the button
+        self.vykresliButton.grid(row=self.i+1, column=1)  # Specify the row and column for the button
 
         self.file_text2 = tk.Label(self)
-        self.file_text2.grid(row=self.i+6, column=1)
+        self.file_text2.grid(row=self.i+2, column=1)
 
         self.i = self.i + 7
 
@@ -176,7 +190,6 @@ class Application(tk.Frame):
 
         self.i = self.i + 1
         self.file_text2.grid(row=self.i, column=1)
-
 
     def vykresliKalibKrivkyButtonOnClick(self):
         if (not (self.file_labela.cget("text").split(".")[-1] == "txt" )):
@@ -207,8 +220,8 @@ class Application(tk.Frame):
 
             filea = open(self.file_labela.cget("text"), 'r', encoding='utf-8')
             riadokCislo = 0
-            hladanyRiadok = int(pixel.get())//256
-            hladanyStlpec = int(pixel.get())%256
+            hladanyRiadok = int(pixel.get())//RESOLUTION
+            hladanyStlpec = int(pixel.get())%RESOLUTION
             for riadok in filea:
                 if riadokCislo == hladanyRiadok:
                     riadok = riadok.strip()
@@ -221,8 +234,8 @@ class Application(tk.Frame):
 
             fileb = open(self.file_labelb.cget("text"), 'r', encoding='utf-8')
             riadokCislo = 0
-            hladanyRiadok = int(pixel.get())//256
-            hladanyStlpec = int(pixel.get())%256
+            hladanyRiadok = int(pixel.get())//RESOLUTION
+            hladanyStlpec = int(pixel.get())%RESOLUTION
             for riadok in fileb:
                 if riadokCislo == hladanyRiadok:
                     riadok = riadok.strip()
@@ -236,8 +249,8 @@ class Application(tk.Frame):
             
             filec = open(self.file_labelc.cget("text"), 'r', encoding='utf-8')
             riadokCislo = 0
-            hladanyRiadok = int(pixel.get())//256
-            hladanyStlpec = int(pixel.get())%256
+            hladanyRiadok = int(pixel.get())//RESOLUTION
+            hladanyStlpec = int(pixel.get())%RESOLUTION
             for riadok in filec:
                 if riadokCislo == hladanyRiadok:
                     riadok = riadok.strip()
@@ -251,8 +264,8 @@ class Application(tk.Frame):
             
             filet = open(self.file_labelt.cget("text"), 'r', encoding='utf-8')
             riadokCislo = 0
-            hladanyRiadok = int(pixel.get())//256
-            hladanyStlpec = int(pixel.get())%256
+            hladanyRiadok = int(pixel.get())//RESOLUTION
+            hladanyStlpec = int(pixel.get())%RESOLUTION
             for riadok in filet:
                 if riadokCislo == hladanyRiadok:
                     riadok = riadok.strip()
@@ -297,17 +310,29 @@ class Application(tk.Frame):
         plt.legend()
         plt.show()
 
-
-    def vykresliKalibButtonOnClick(self):
-        if (self.file_label.cget("text") == "Drop .totKanaly file here" or not (self.file_label.cget("text").split(".")[-1] == "totKanaly" or self.file_label.cget("text").split(".")[-1] == "rudolf")):
+    def vykresliHistogramButtonOnClick(self, porovnanie):
+        kalibKrivy = True
+        if (self.file_label.cget("text") == "zadaj sem subor" or not (self.file_label.cget("text").split(".")[-1] == "totKanaly" or self.file_label.cget("text").split(".")[-1] == "rudolf")):
             self.file_text2.config(text="Zlý vstupný súbor")
             print("No file selected")
             return
-        if (self.text_entrypixel.get() == ""):
-            self.file_text2.config(text="Zlé číslo pixela")
-            print("wrong pixel entered")
-            return
-        printHistogramFromLineOfData.printHistogramFromLineOfData(self.file_label.cget("text"), self.text_entrypixel.get())
+      
+        if (not (self.file_labela.cget("text").split(".")[-1] == "txt" )):
+            kalibKrivy = False
+        
+        if (not (self.file_labelb.cget("text").split(".")[-1] == "txt" )):
+            kalibKrivy = False
+        
+        if (not (self.file_labelc.cget("text").split(".")[-1] == "txt" )):
+            kalibKrivy = False
+        
+        if (not (self.file_labelt.cget("text").split(".")[-1] == "txt" )):
+            kalibKrivy = False
+
+        if (kalibKrivy):
+            printHistogramCalibrated.printHistogramCalibrated(self.file_label.cget("text"), self.text_entrypixel.get(), self.file_labela.cget("text"), self.file_labelb.cget("text"), self.file_labelc.cget("text"), self.file_labelt.cget("text"), porovnanie)
+        else:
+            printHistogram.printHistogramFromLineOfData(self.file_label.cget("text"), self.text_entrypixel.get())
 
     def renderHistogramWidget(self):
         # Destroy the current frame
@@ -316,36 +341,93 @@ class Application(tk.Frame):
         new_app.histogramWidget()
         new_app.mainloop()
 
+    def kalibrujOnClick(self):
+        energie = [TRESHOLD]
+        casy = [[0]]*RESOLUTION*RESOLUTION
+        print(casy)
+
+        for i in range(len(self.labels)):
+            if (self.labels[i].cget("text") == "zadaj sem subor"):
+                continue
+
+            if (self.toggle_states[i] == "Ano"):
+                energie.append(17.7)
+                energie.append(20.7)
+                energie.append(26.3)
+                energie.append(59.5)
+                array = americium4peaky(self.labels[i].cget("text"))
+            else:
+                energie.append(float(self.energie[i].get()))
+        
+
+    def toggle(self, i, toggle_button):
+
+        if self.toggle_states[i] == "Ano":
+            print(i)
+            self.energie[i].grid(row=5+(4*i), column=2)
+            self.toggle_states[i] = "Nie"
+            toggle_button.config(text="Nie")
+        else:
+            self.energie[i].grid_forget()
+            self.toggle_states[i] = "Ano"
+            toggle_button.config(text="Ano")
+
     def calibrationWidget(self):
-        self.topRow()
+        self.toggle_states = []
+        self.toggle_buttons = []
         self.labels=[]
+        self.energie = []
+        self.i = 2
+        self.topRow()
         self.file_text = tk.Label(self, text="precinok na vystup:")
-        self.file_text.grid(row=2, column=0)
+        self.file_text.grid(row=self.i, column=0)
 
         # Create a label for displaying the dropped file name
         self.file_label = tk.Label(self, text="zadaj sem priecinok")
-        self.file_label.grid(row=2, column=2)
+        self.file_label.grid(row=self.i, column=2)
 
         self.file_label.bind("<ButtonRelease>", lambda event: self.openFolderExplorer(event, self.file_label))
 
+        self.parseButton = tk.Button(self, text='kalibruj', command=self.kalibrujOnClick)
+
+        self.pridajRad = tk.Button(self, text='Pridaj ďalsie súbory', command=self.pridajRadKalibracnychSuborov)
+
+        self.i = self.i + 2
+        self.file_text2 = tk.Label(self)
+        self.pridajRadKalibracnychSuborov()
+        
+    def pridajRadKalibracnychSuborov(self):
         self.file_text = tk.Label(self, text=".totKanaly súbor:")
-        self.file_text.grid(row=3, column=0)
+        self.file_text.grid(row=self.i, column=0)
 
         self.labels.append(tk.Label(self, text="zadaj sem subor"))
-        self.labels[0].grid(row=3, column=2)
+        j = len(self.labels) - 1
+        self.labels[j].grid(row=self.i, column=2)
 
-        self.labels[0].bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.labels[0]))
+        self.labels[j].bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.labels[j]))
 
+        self.file_text = tk.Label(self, text="Je to Americium?")
+        self.file_text.grid(row=self.i+1, column=0) 
 
-        self.addButton = tk.Button(self, text='dalsi subor', command=self.pridajRadSuborov)
-        self.addButton.grid(row=len(self.labels) + 4, column=0)
-        self.parseButton = tk.Button(self, text='vykresli', command=self.vykresliKalibKrivkyButtonOnClick)
-        self.parseButton.grid(row=len(self.labels) + 4, column=1)
+        self.toggle_states.append(False)
+        toggle_button = tk.Button(self, text="Nie", command=lambda: self.toggle(j, toggle_button))
+        self.toggle_buttons.append(toggle_button)
+        toggle_button.grid(row=self.i+1, column=1)
 
-        self.file_text2 = tk.Label(self)
-        self.file_text2.grid(row=6, column=1)
+        energia = tk.Entry(self)
+        energia.grid(row=self.i+1, column=2)
+        self.energie.append(energia) 
+        
+        self.parseButton.grid(row=self.i+2, column=1)
+        self.pridajRad.grid(row=self.i+2, column=0)
+        
+        self.file_text2.grid(row=self.i+3, column=1)
+
+        self.i = self.i + 4
+        
 
     def pridajRadSuborov(self):
+        
         self.text = tk.Label(self, text=".totKanaly súbor:")
         self.text.grid(row=4+len(self.labels), column=0)
 

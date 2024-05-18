@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from globals import MAX_TOT
+from sumCalibrationData import sumCalibrationData
 
 # inputFile = f"calibrationData.rudolf"
 # inputFile = f"summedCalibrationData.rudolf"
@@ -14,18 +15,21 @@ from globals import MAX_TOT
 
 
 def printHistogramFromLineOfData(inputFile, riadokNaVypis):
-  riadokNaVypis = int(riadokNaVypis)
-  arraySpocitany = 0
-  file = open(inputFile, 'r', encoding='utf-8')
-  riadokCislo=0
+  if (riadokNaVypis == ""):
+    arraySpocitany = sumCalibrationData(inputFile)
+  else :
+    riadokNaVypis = int(riadokNaVypis)
+    arraySpocitany = 0
+    file = open(inputFile, 'r', encoding='utf-8')
+    riadokCislo=0
 
-  for riadok in file:
-    riadokCislo += 1
-    if (riadokCislo == riadokNaVypis):
-      riadok = riadok.strip()
-      riadok = riadok.split(" ")
-      arraySpocitany = riadok
-      break
+    for riadok in file:
+      riadokCislo += 1
+      if (riadokCislo == riadokNaVypis):
+        riadok = riadok.strip()
+        riadok = riadok.split(" ")
+        arraySpocitany = riadok
+        break
 
   print(arraySpocitany)
   for i in range(len(arraySpocitany)):

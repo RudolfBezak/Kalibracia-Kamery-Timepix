@@ -2,19 +2,16 @@ import numpy as np
 from scipy.optimize import curve_fit
 import concurrent.futures
 
-from globals import TRESHOLD
+from custom_function import custom_function
+from globals import RESOLUTION, TRESHOLD
 
 inputFile = "am4peaks.rudolf"
 outputFilea = "calib_a.txt"
 outputFileb = "calib_b.txt"
 outputFilec = "calib_c.txt"
 outputFilet = "calib_t.txt"
-
+ 
 x_data = np.array([6, 17.7, 20.7, 26.3, 59.5])
-
-# Define the function
-def custom_function(x, a, b, c, t):
-    return a * x + b - (c / (x - t))
 
 def process_line(riadok):
     global riadokCislo
@@ -27,14 +24,14 @@ def process_line(riadok):
 
     riadokCislo += 1
     riadok = riadok.strip().split(" ")
-    if riadokCislo % 256 == 0:
-        print(riadokCislo / 256 / 256 * 100, "%")
+    if riadokCislo % RESOLUTION == 0:
+        print(riadokCislo / RESOLUTION / RESOLUTION * 100, "%")
     for i in range(len(riadok)):
         riadok[i] = int(riadok[i])
     
     riadok.insert(0, 0)
     y_data = np.array(riadok)
-    params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([-np.inf, -np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf, TRESHOLD]))
+    params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([0, -np.inf, -np.inf, 0], [np.inf, np.inf, np.inf, TRESHOLD]))
     arrayA[tentoRiadokCislo] = params[0]
     arrayB[tentoRiadokCislo] = params[1]
     arrayC[tentoRiadokCislo] = params[2]
@@ -43,10 +40,10 @@ def process_line(riadok):
 # Main execution
 riadokCislo = 0
 percenta = 0
-arrayA = [0] * (256*256)
-arrayB = [0] * (256*256)
-arrayC = [0] * (256*256)
-arrayT = [0] * (256*256)
+arrayA = [0] * (RESOLUTION*RESOLUTION)
+arrayB = [0] * (RESOLUTION*RESOLUTION)
+arrayC = [0] * (RESOLUTION*RESOLUTION)
+arrayT = [0] * (RESOLUTION*RESOLUTION)
 
 with open(inputFile, 'r', encoding='utf-8') as file:
     lines = file.readlines()
@@ -68,7 +65,7 @@ with open(outputFilea, "w") as filea, open(outputFileb, "w") as fileb, \
         filec.write(str(arrayC[i]) + " ")
         filet.write(str(arrayT[i]) + " ")
         
-        if(riadokCislo == 256):
+        if(riadokCislo == RESOLUTION):
             riadokCislo = 0
             filea.write("\n")
             fileb.write("\n")
