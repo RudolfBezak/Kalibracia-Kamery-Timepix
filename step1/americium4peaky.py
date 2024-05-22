@@ -8,9 +8,8 @@ from globals import MAX_TOT
 
 def americium4peaky(vstupnySuborCesta):
   zaciatok = 0
-  koniec = MAX_TOT/2
+  koniec = round(MAX_TOT/2)
   treshold = 0.5
-  riadokCislo = 0
 
   def najdiSekundarnyPeak(riadok, hlavnyPeakIndex, smer=False): 
       # Funkcia pre hľadanie sekundárneho "peak-u" v danom riadku hodnôt.
@@ -61,7 +60,6 @@ def americium4peaky(vstupnySuborCesta):
       
       max_value = sublist.index(max(sublist)) + zaciatok
 
-
       maximaArray = []
       maximaArray.append(najdiSekundarnyPeak(riadok, max_value, True)) 
       maximaArray.append(max_value + 1)
@@ -74,6 +72,8 @@ def americium4peaky(vstupnySuborCesta):
       
       max_value = sublist.index(max(sublist)) + koniec
       maximaArray.append(max_value + 1)
+
+      vystupnyArray.append(maximaArray)
 
   return vystupnyArray
 

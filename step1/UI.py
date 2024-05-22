@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from americium4peaky import americium4peaky
 from custom_function import custom_function
+from multithreadingFitting import calibLine, multithreadingFitting, zapisCalibDoSuboru
 import printHistogramCalibrated
 import rawDataToCalibrationData
 import printHistogram
@@ -343,8 +344,7 @@ class Application(tk.Frame):
 
     def kalibrujOnClick(self):
         energie = [TRESHOLD]
-        casy = [[0]]*RESOLUTION*RESOLUTION
-        print(casy)
+        casy = []*RESOLUTION*RESOLUTION
 
         for i in range(len(self.labels)):
             if (self.labels[i].cget("text") == "zadaj sem subor"):
@@ -356,8 +356,25 @@ class Application(tk.Frame):
                 energie.append(26.3)
                 energie.append(59.5)
                 array = americium4peaky(self.labels[i].cget("text"))
+                for j in range(len(array)):
+                    casy.append(array[j])
             else:
                 energie.append(float(self.energie[i].get()))
+                with open(self.labels[i].cget("text"), 'r', encoding='utf-8') as file:
+                    array = []
+                    for line in file:
+                        riadok = line.strip()
+                        riadok = riadok.split(" ")
+                        for i in range(len(riadok)):
+                            riadok[i] = int(riadok[i])
+                        array.append(riadok)
+
+                    for j in range(len(casy)):
+                        casy[j].append(array[j].index(max(array[j])))
+
+        print("found peaks")
+
+        multithreadingFitting(casy, energie, self.file_label.cget("text"), self)
         
 
     def toggle(self, i, toggle_button):
@@ -425,7 +442,6 @@ class Application(tk.Frame):
 
         self.i = self.i + 4
         
-
     def pridajRadSuborov(self):
         
         self.text = tk.Label(self, text=".totKanaly súbor:")

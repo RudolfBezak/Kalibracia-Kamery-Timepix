@@ -10,24 +10,22 @@ outputFilea = "calib_a.txt"
 outputFileb = "calib_b.txt"
 outputFilec = "calib_c.txt"
 outputFilet = "calib_t.txt"
- 
-x_data = np.array([6, 17.7, 20.7, 26.3, 59.5])
 
-def process_line(riadok):
+def calibLine(riadok):
     global riadokCislo
     tentoRiadokCislo = riadokCislo
+    riadokCislo += 1
+    global window
     global percenta
     global arrayA
     global arrayB
     global arrayC
     global arrayT
-
-    riadokCislo += 1
-    riadok = riadok.strip().split(" ")
-    if riadokCislo % RESOLUTION == 0:
-        print(riadokCislo / RESOLUTION / RESOLUTION * 100, "%")
-    for i in range(len(riadok)):
-        riadok[i] = int(riadok[i])
+    global x_data
+    if ((tentoRiadokCislo % RESOLUTION) == 0):
+        print(tentoRiadokCislo / RESOLUTION / RESOLUTION * 100, "%")
+        window.file_text2.config(text = str(round(tentoRiadokCislo / RESOLUTION / RESOLUTION * 100)) + "%")
+        window.update_idletasks()
     
     riadok.insert(0, 0)
     y_data = np.array(riadok)
@@ -44,30 +42,38 @@ arrayA = [0] * (RESOLUTION*RESOLUTION)
 arrayB = [0] * (RESOLUTION*RESOLUTION)
 arrayC = [0] * (RESOLUTION*RESOLUTION)
 arrayT = [0] * (RESOLUTION*RESOLUTION)
+x_data = []
+window = None
 
-with open(inputFile, 'r', encoding='utf-8') as file:
-    lines = file.readlines()
+def multithreadingFitting(casy, x_dataVstup, vystupnySuborCesta, windowApp):
+    global x_data
+    x_data = x_dataVstup
+    global window
+    window = windowApp
+    
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+          executor.map(calibLine, casy)
 
-with concurrent.futures.ThreadPoolExecutor() as executor:
-    executor.map(process_line, lines)
+    zapisCalibDoSuboru(vystupnySuborCesta)
 
 
-print("zapis do suborov")
-print(len(arrayA))
-riadokCislo = 0
-with open(outputFilea, "w") as filea, open(outputFileb, "w") as fileb, \
-    open(outputFilec, "w") as filec, open(outputFilet, "w") as filet:
-    for i in range(len(arrayA)):
-        riadokCislo += 1
+def zapisCalibDoSuboru(priecinok):
+    print("zapis do suborov")
+    print(len(arrayA))
+    riadokCislo = 0
+    with open(priecinok + "/calib_a.txt", "w") as filea, open(priecinok + "/calib_b.txt", "w") as fileb, \
+        open(priecinok + "/calib_c.txt", "w") as filec, open(priecinok + "/calib_t.txt", "w") as filet:
+        for i in range(len(arrayA)):
+            riadokCislo += 1
 
-        filea.write(str(arrayA[i]) + " ")
-        fileb.write(str(arrayB[i]) + " ")
-        filec.write(str(arrayC[i]) + " ")
-        filet.write(str(arrayT[i]) + " ")
-        
-        if(riadokCislo == RESOLUTION):
-            riadokCislo = 0
-            filea.write("\n")
-            fileb.write("\n")
-            filec.write("\n")
-            filet.write("\n")
+            filea.write(str(arrayA[i]) + " ")
+            fileb.write(str(arrayB[i]) + " ")
+            filec.write(str(arrayC[i]) + " ")
+            filet.write(str(arrayT[i]) + " ")
+            
+            if(riadokCislo == RESOLUTION):
+                riadokCislo = 0
+                filea.write("\n")
+                fileb.write("\n")
+                filec.write("\n")
+                filet.write("\n")
