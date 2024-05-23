@@ -38,8 +38,8 @@ def printHistogramFromLineOfData(inputFile, riadokNaVypis):
 
   x = np.arange(1, MAX_TOT+1)
   y = np.array(arraySpocitany)
-  plt.title("Line graph")
+  plt.title("Histogram")
   plt.xlabel("TOT")
-  plt.ylabel("count")
+  plt.ylabel("početnosť")
   plt.plot(x, y, color ="red")
   plt.show()

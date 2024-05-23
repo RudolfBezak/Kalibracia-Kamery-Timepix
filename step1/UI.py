@@ -17,7 +17,7 @@ class Application(tk.Frame):
         self.grid()
 
     def topRow(self):
-        self.master.title('Timepix Kalibracia')
+        self.master.title('Timepix Kalibrácia')
         self.rawData = tk.Button(self, text='Per pixel spektrá', command=self.renderRawDataWidget)
         self.rawData.grid(row=1, column=0)
 
@@ -35,7 +35,7 @@ class Application(tk.Frame):
         self.file_text.grid(row=2, column=0)
 
         # Create a label for displaying the dropped file name
-        self.file_label = tk.Label(self, text="zadaj sem subor")
+        self.file_label = tk.Label(self, text="zadaj sem súbor")
         self.file_label.grid(row=2, column=2)
 
         # Bind drag and drop events
@@ -127,7 +127,7 @@ class Application(tk.Frame):
         self.file_text.grid(row=self.i, column=0)
 
         # Create a label for displaying the dropped file name
-        self.file_label = tk.Label(self, text="zadaj sem subor")
+        self.file_label = tk.Label(self, text="zadaj sem súbor")
         self.file_label.grid(row=self.i, column=2)
 
         self.file_label.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_label))
@@ -146,7 +146,7 @@ class Application(tk.Frame):
         self.vykresliButton = tk.Button(self, text='vykresli', command=lambda: self.vykresliHistogramButtonOnClick(False))
         self.vykresliButton.grid(row=self.i+4, column=1)  # Specify the row and column for the button
 
-        self.vykresliVsetkoButton = tk.Button(self, text='vykresli s porovnanim', command=lambda: self.vykresliHistogramButtonOnClick(True))
+        self.vykresliVsetkoButton = tk.Button(self, text='vykresli s porovnaním', command=lambda: self.vykresliHistogramButtonOnClick(True))
         self.vykresliVsetkoButton.grid(row=self.i+4, column=2)  # Specify the row and column for the button
 
         self.file_text2 = tk.Label(self)
@@ -167,7 +167,7 @@ class Application(tk.Frame):
         self.text_entry.grid(row=self.i, column=2)
         self.pixely.append(self.text_entry)
   
-        self.addButton = tk.Button(self, text='dalsi pixel', command=self.pridajRadKalibracnychKriviek)
+        self.addButton = tk.Button(self, text='ďalší pixel', command=self.pridajRadKalibracnychKriviek)
         self.addButton.grid(row=self.i+1, column=0)
 
         self.vykresliButton = tk.Button(self, text='vykresli', command=self.vykresliKalibKrivkyButtonOnClick)
@@ -370,13 +370,15 @@ class Application(tk.Frame):
                         array.append(riadok)
 
                     for j in range(len(casy)):
-                        casy[j].append(array[j].index(max(array[j])))
+                        if max(array[j] == 0):
+                            casy.append(None)
+                        else:
+                            casy.append(array[j].index(max(array[j])))
 
         print("found peaks")
 
-        multithreadingFitting(casy, energie, self.file_label.cget("text"), self)
+        multithreadingFitting(casy, energie, self.file_label.cget("text"))
         
-
     def toggle(self, i, toggle_button):
 
         if self.toggle_states[i] == "Ano":
@@ -396,11 +398,11 @@ class Application(tk.Frame):
         self.energie = []
         self.i = 2
         self.topRow()
-        self.file_text = tk.Label(self, text="precinok na vystup:")
+        self.file_text = tk.Label(self, text="prečinok na výstup:")
         self.file_text.grid(row=self.i, column=0)
 
         # Create a label for displaying the dropped file name
-        self.file_label = tk.Label(self, text="zadaj sem priecinok")
+        self.file_label = tk.Label(self, text="zadaj sem priečinok")
         self.file_label.grid(row=self.i, column=2)
 
         self.file_label.bind("<ButtonRelease>", lambda event: self.openFolderExplorer(event, self.file_label))
@@ -417,13 +419,13 @@ class Application(tk.Frame):
         self.file_text = tk.Label(self, text=".totKanaly súbor:")
         self.file_text.grid(row=self.i, column=0)
 
-        self.labels.append(tk.Label(self, text="zadaj sem subor"))
+        self.labels.append(tk.Label(self, text="zadaj sem súbor"))
         j = len(self.labels) - 1
         self.labels[j].grid(row=self.i, column=2)
 
         self.labels[j].bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.labels[j]))
 
-        self.file_text = tk.Label(self, text="Je to Americium?")
+        self.file_text = tk.Label(self, text="Je to Amerícium?")
         self.file_text.grid(row=self.i+1, column=0) 
 
         self.toggle_states.append(False)
@@ -447,7 +449,7 @@ class Application(tk.Frame):
         self.text = tk.Label(self, text=".totKanaly súbor:")
         self.text.grid(row=4+len(self.labels), column=0)
 
-        self.labels.append(tk.Label(self, text="zadaj sem subor"))
+        self.labels.append(tk.Label(self, text="zadaj sem súbor"))
         self.labels[-1].grid(row=3+len(self.labels), column=2)
         
         i = len(self.labels) - 1

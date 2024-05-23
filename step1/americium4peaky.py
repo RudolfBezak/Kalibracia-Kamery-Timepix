@@ -61,8 +61,11 @@ def americium4peaky(vstupnySuborCesta):
       max_value = sublist.index(max(sublist)) + zaciatok
 
       maximaArray = []
-      maximaArray.append(najdiSekundarnyPeak(riadok, max_value, True)) 
-      maximaArray.append(max_value + 1)
+      maximaArray.append(najdiSekundarnyPeak(riadok, max_value, True))
+      if (max_value == 0 or max_value == MAX_TOT):
+          maximaArray.append(None)
+      else:
+          maximaArray.append(max_value + 1)
       maximaArray.append(najdiSekundarnyPeak(riadok, max_value))
 
 
@@ -71,7 +74,10 @@ def americium4peaky(vstupnySuborCesta):
       sublist = data[koniec:MAX_TOT + 1]
       
       max_value = sublist.index(max(sublist)) + koniec
-      maximaArray.append(max_value + 1)
+      if (max_value == 0 or max_value == MAX_TOT):
+          maximaArray.append(None)
+      else:
+          maximaArray.append(max_value + 1)
 
       vystupnyArray.append(maximaArray)
 
