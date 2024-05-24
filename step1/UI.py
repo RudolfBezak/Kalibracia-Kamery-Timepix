@@ -8,7 +8,7 @@ import rawDataToCalibrationData
 import printHistogram
 import matplotlib.pyplot as plt
 import numpy as np
-from globals import MAX_TOT, RESOLUTION, TRESHOLD
+from globals import MAX_TOT, RESOLUTION, THRESHOLD
 
 class Application(tk.Frame):
 
@@ -279,32 +279,34 @@ class Application(tk.Frame):
 
             params = (float(a), float(b), float(c), float(t))
 
-            x_fit = np.linspace(TRESHOLD, MAX_TOT)
+            x_fit = np.linspace(THRESHOLD, MAX_TOT)
             y_fit = custom_function(x_fit, *params)
 
             print(params)
             colors = ['red', 'blue', 'green', 'black', 'purple', 'orange',  'brown', 'cyan', 'pink', 'yellow']
             plt.plot(x_fit, y_fit, label='Pixel ' + pixel.get(), color=colors[i])
 
-        x_data = np.array([TRESHOLD, 17.7, 20.7, 26.3, 59.5])
-        fileData = open("am4peaks.rudolf", 'r', encoding='utf-8')
-        riadokCislo = 1
-        for riadok in fileData:
-            if riadokCislo == int(self.pixely[0].get()):
-                riadok = riadok.strip()
-                riadok = riadok.split(" ")
-                print("riadok", riadok)
-                for i in range(len(riadok)):
-                    riadok[i] = int(riadok[i])
-                riadok.insert(0, 0)
-                print("riadok", riadok)
-                y_data = np.array(riadok)
-                print("y_data", y_data)
-                break
-            riadokCislo += 1
 
-        print("x", x_data, "y", y_data)
-        plt.scatter(x_data, y_data, label='Namerané hodnoty', color='black')
+        # testovacie body
+        # x_data = np.array([THRESHOLD, 17.7, 20.7, 26.3, 59.5])
+        # fileData = open("am4peaks.rudolf", 'r', encoding='utf-8')
+        # riadokCislo = 1
+        # for riadok in fileData:
+        #     if riadokCislo == int(self.pixely[0].get()):
+        #         riadok = riadok.strip()
+        #         riadok = riadok.split(" ")
+        #         print("riadok", riadok)
+        #         for i in range(len(riadok)):
+        #             riadok[i] = int(riadok[i])
+        #         riadok.insert(0, 0)
+        #         print("riadok", riadok)
+        #         y_data = np.array(riadok)
+        #         print("y_data", y_data)
+        #         break
+        #     riadokCislo += 1
+
+        # print("x", x_data, "y", y_data)
+        # plt.scatter(x_data, y_data, label='Namerané hodnoty', color='black')
           
         plt.xlabel('Energia (KeV)')
         plt.ylabel('ToT (ADU)')
@@ -313,7 +315,7 @@ class Application(tk.Frame):
 
     def vykresliHistogramButtonOnClick(self, porovnanie):
         kalibKrivy = True
-        if (self.file_label.cget("text") == "zadaj sem subor" or not (self.file_label.cget("text").split(".")[-1] == "totKanaly" or self.file_label.cget("text").split(".")[-1] == "rudolf")):
+        if ((self.file_label.cget("text") == "zadaj sem subor" or self.file_label.cget("text") == "") or not (self.file_label.cget("text").split(".")[-1] == "totKanaly" or self.file_label.cget("text").split(".")[-1] == "rudolf")):
             self.file_text2.config(text="Zlý vstupný súbor")
             print("No file selected")
             return
@@ -343,7 +345,7 @@ class Application(tk.Frame):
         new_app.mainloop()
 
     def kalibrujOnClick(self):
-        energie = [TRESHOLD]
+        energie = [THRESHOLD]
         casy = []*RESOLUTION*RESOLUTION
 
         for i in range(len(self.labels)):

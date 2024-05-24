@@ -76,7 +76,11 @@ def printHistogramCalibrated(inputFile, riadokNaVypis, caliba, calibb, calibc, c
         for j in range(len(riadok)):
             riadokData.append(int(riadok[j]))
             # print(i, j, aData[i], bData[i], cData[i], tData[i])
-            riadokChannels.append(round(custom_function2(j+1, aData[i], bData[i], cData[i], tData[i], i)))
+            kev = round(custom_function2(j+1, aData[i], bData[i], cData[i], tData[i], i))
+            if (kev > MAX_TOT*2):
+                riadokChannels.append(1)
+                continue
+            riadokChannels.append(kev)
 
         count.append(riadokData)
         channel.append(riadokChannels)
@@ -88,6 +92,8 @@ def printHistogramCalibrated(inputFile, riadokNaVypis, caliba, calibb, calibc, c
     #spocitaj data
     for i in range(len(count)):
         for j in range(len(count[i])):
+            if (channel[i][j] < 1):
+                continue
             resultArray[i][channel[i][j] - 1] += count[i][j]
 
     arraySpocitany = sumCalibrationData(resultArray, True)

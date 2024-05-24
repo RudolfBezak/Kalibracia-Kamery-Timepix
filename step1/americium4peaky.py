@@ -1,15 +1,9 @@
 from globals import MAX_TOT
 
-# vstupnySuborCesta = f"calibrationData.rudolf"
-# vystupnySuborCesta = f"am4peaks.rudolf"
-
-
-# print("start")
-
 def americium4peaky(vstupnySuborCesta):
   zaciatok = 0
   koniec = round(MAX_TOT/2)
-  treshold = 0.5
+  threshold = 0.5
 
   def najdiSekundarnyPeak(riadok, hlavnyPeakIndex, smer=False): 
       # Funkcia pre hľadanie sekundárneho "peak-u" v danom riadku hodnôt.
@@ -45,7 +39,7 @@ def americium4peaky(vstupnySuborCesta):
               return i + 1  # Vráti index nájdeného sekundárneho peak-u
 
           # Podmienka pre zistenie zmeny v strmosti
-          if strmost < (strmostKrokSpat * treshold):
+          if strmost < (strmostKrokSpat * threshold):
               najdenaZmena = True
 
           strmostKrokSpat = strmost
@@ -56,7 +50,7 @@ def americium4peaky(vstupnySuborCesta):
   vystupnyArray = []
   for riadok in vstupnySubor:
       data = [int(x) for x in riadok.split()]
-      sublist = data[zaciatok:koniec + 1]
+      sublist = data
       
       max_value = sublist.index(max(sublist)) + zaciatok
 

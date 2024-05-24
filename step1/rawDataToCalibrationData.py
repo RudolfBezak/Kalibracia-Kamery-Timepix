@@ -6,9 +6,9 @@ from globals import MAX_TOT
 VELKOST_CLUSTERA = 1
 PERCENT_VYPIS = 5
 
-inputFile = f"step1\SiCTPX3\Cu.clog"
+# inputFile = f"step1\SiCTPX3\Cu.clog"
 # inputFile = f"./SiCTPX3/SiCTPX3L06-InRTG40kV100uA.clog"
-outputFile = f"calibrationData.rudolf1"
+# outputFile = f"calibrationData.rudolf1"
 # fileAdress = f"input.clog"
 
 def rawDataToCalibrationData(inputFile, outputFile, textOutput):
@@ -67,7 +67,7 @@ def rawDataToCalibrationData(inputFile, outputFile, textOutput):
     #kalibracne data do suboru
   def calibrationToFile(calibrationData):
     print("zapisujem vystup do suboru")
-    file = open(f"" + outputFile +".rudolf1", 'w', encoding='utf-8')
+    file = open(f"" + outputFile +".totKanaly", 'w', encoding='utf-8')
 
     for riadok in calibrationData:
       for data in riadok:

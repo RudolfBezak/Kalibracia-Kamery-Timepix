@@ -13,9 +13,9 @@ def sumCalibrationData(input, pole = False):
 
   if pole:
     result = [0]*len(input[0])
-    for i in range(len(input[0])):
+    for i in range(len(input)):
       for j in range(len(input[i])):
-        result[i] += int(input[j][i])
+        result[j] += int(input[i][j])
 
   else: 
     file = open(input, 'r', encoding='utf-8')

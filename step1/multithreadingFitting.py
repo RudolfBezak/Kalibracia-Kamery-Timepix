@@ -3,7 +3,7 @@ from scipy.optimize import curve_fit
 import concurrent.futures
 
 from custom_function import custom_function
-from globals import RESOLUTION, TRESHOLD
+from globals import RESOLUTION, THRESHOLD
 
 # Inicializácia premenných a polí
 riadokCislo = 0
@@ -28,7 +28,7 @@ def calibLine(riadok):
     y_data = np.array(riadok)  # Konvertovanie riadku na numpy pole
 
     # Fitovanie dát na základe custom_function a ukladanie parametrov do príslušných polí
-    params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([0, -np.inf, -np.inf, 0], [np.inf, np.inf, np.inf, TRESHOLD]))
+    params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([0, -np.inf, -np.inf, 0], [np.inf, np.inf, np.inf, THRESHOLD]))
     arrayA[tentoRiadokCislo] = params[0]
     arrayB[tentoRiadokCislo] = params[1]
     arrayC[tentoRiadokCislo] = params[2]
