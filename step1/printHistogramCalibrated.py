@@ -159,7 +159,7 @@ def printHistogramCalibrated(inputFile, riadokNaVypis, caliba, calibb, calibc, c
   y = np.array(arraySpocitany)
   x2 = np.arange(1, MAX_TOT+1)
   plt.ylabel("Početnosť")
-  plt.plot(x, y, color ="blue", label="Kalibrované [KeV]")
+  plt.plot(x, y, color ="blue", label="Kalibrované [keV]")
   if (riadokNaVypis == ""):
       plt.title("Spektrum všetkých pixelov")
       y = sumCalibrationData(inputFile)
@@ -167,8 +167,8 @@ def printHistogramCalibrated(inputFile, riadokNaVypis, caliba, calibb, calibc, c
       plt.title("Spektrum " + str(riadokNaVypis) + " pixela")
   if (porovnanie): 
       plt.plot(x2, y, color ="red", label="Nekalibrované ToT [ADU]")
-      plt.xlabel("Energia [KeV] resp. ToT [ADU]")
+      plt.xlabel("Energia [keV] resp. ToT [ADU]")
   else:
-      plt.xlabel("Energia [KeV]")
+      plt.xlabel("Energia [keV]")
   plt.legend()
   plt.show()

@@ -308,7 +308,7 @@ class Application(tk.Frame):
         # print("x", x_data, "y", y_data)
         # plt.scatter(x_data, y_data, label='Namerané hodnoty', color='black')
           
-        plt.xlabel('Energia (KeV)')
+        plt.xlabel('Energia (keV)')
         plt.ylabel('ToT (ADU)')
         plt.legend()
         plt.show()
