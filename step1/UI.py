@@ -346,7 +346,7 @@ class Application(tk.Frame):
 
     def kalibrujOnClick(self):
         energie = [THRESHOLD]
-        casy = []*RESOLUTION*RESOLUTION
+        casy = []
 
         for i in range(len(self.labels)):
             if (self.labels[i].cget("text") == "zadaj sem subor"):
@@ -372,7 +372,7 @@ class Application(tk.Frame):
                         array.append(riadok)
 
                     for j in range(len(casy)):
-                        if max(array[j] == 0):
+                        if max(array[j]) == 0:
                             casy.append(None)
                         else:
                             casy.append(array[j].index(max(array[j])))
