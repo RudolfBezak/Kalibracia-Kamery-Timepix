@@ -371,7 +371,7 @@ class Application(tk.Frame):
                             riadok[i] = int(riadok[i])
                         array.append(riadok)
 
-                    for j in range(len(casy)):
+                    for j in range(len(array)):
                         if max(array[j]) == 0:
                             casy.append(None)
                         else:

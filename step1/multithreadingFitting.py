@@ -7,6 +7,7 @@ from globals import RESOLUTION, THRESHOLD
 
 # Inicializácia premenných a polí
 riadokCislo = 0
+totalPixels = RESOLUTION * RESOLUTION  # Celkový počet pixelov na spracovanie
 arrayA = [0] * (RESOLUTION * RESOLUTION)  # Pole pre hodnoty parametra A
 arrayB = [0] * (RESOLUTION * RESOLUTION)  # Pole pre hodnoty parametra B
 arrayC = [0] * (RESOLUTION * RESOLUTION)  # Pole pre hodnoty parametra C
@@ -15,14 +16,14 @@ x_data = []  # Pole pre hodnoty x, ktoré sa budú používať pri fitovaní
 
 def calibLine(riadok):
     # Definovanie funkcie na kalibráciu jedného riadku
-    global riadokCislo  # Globálna premenná pre sledovanie aktuálneho riadku
+    global riadokCislo, totalPixels  # Globálna premenná pre sledovanie aktuálneho riadku
     tentoRiadokCislo = riadokCislo  # Uloženie aktuálneho čísla riadku
     riadokCislo += 1  # Zvýšenie čísla riadku pre ďalšie volanie funkcie
     global arrayA, arrayB, arrayC, arrayT, x_data  # Použitie globálnych polí a dát
 
     if (tentoRiadokCislo % RESOLUTION) == 0:
         # Ak je aktuálny riadok násobkom RESOLUTION, vypíše sa progres
-        print(round(tentoRiadokCislo / RESOLUTION / RESOLUTION * 100, 1), "%")
+        print(round(tentoRiadokCislo / totalPixels * 100, 1), "%")
     
     riadok.insert(0, 0)  # Pridanie 0 na začiatok riadku
     y_data = np.array(riadok)  # Konvertovanie riadku na numpy pole
@@ -62,8 +63,10 @@ def zapisCalibDoSuboru(priecinok):
   
 def multithreadingFitting(casy, x_dataVstup, vystupnySuborCesta):
   # Definovanie funkcie pre paralelné fitovanie viacerých riadkov
-  global x_data  # Použitie globálnej premenná x_data
+  global x_data, riadokCislo, totalPixels  # Použitie globálnej premenná x_data a riadokCislo
   x_data = x_dataVstup  # Nastavenie vstupných dát pre x
+  riadokCislo = 0  # Reset počítadla pre progress bar
+  totalPixels = len(casy)  # Nastavenie celkového počtu pixelov na základe dĺžky vstupných dát
 
   # Použitie ThreadPoolExecutor pre paralelné spracovanie riadkov
   with concurrent.futures.ThreadPoolExecutor() as executor:
