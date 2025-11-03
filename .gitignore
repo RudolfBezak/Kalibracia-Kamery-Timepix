@@ -18,6 +18,8 @@ dist/
 *.exe
 *.manifest
 *.log
+step1/build/
+step1/dist/
 
 # IDE
 .vscode/
