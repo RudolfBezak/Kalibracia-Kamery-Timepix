@@ -135,13 +135,6 @@ def printHistogramCalibrated(inputFile, riadokNaVypis, caliba, calibb, calibc, c
             tValue = riadok[(riadokNaVypis-1) % RESOLUTION]
         riadokCislo += 1
 
-    arrayx = [0] * MAX_TOT
-
-    #premen data na kalibrovanie pomocou inverznej kalibracnej funkcie
-    print(aValue, bValue, cValue, tValue)
-    for i in range(len(arrayx)):
-        arrayx[i] = custom_function2(i+1, float(aValue), float(bValue), float(cValue), float(tValue))
-
     riadokCislo=0
     for riadok in file:
       riadokCislo += 1
@@ -150,23 +143,31 @@ def printHistogramCalibrated(inputFile, riadokNaVypis, caliba, calibb, calibc, c
         riadok = riadok.split(" ")
         arraySpocitany = riadok
 
-    print(arraySpocitany)
     for i in range(len(arraySpocitany)):
       arraySpocitany[i] = int(arraySpocitany[i])
 
+    arrayx = [0] * len(arraySpocitany)
+    for i in range(len(arraySpocitany)):
+        arrayx[i] = custom_function2(i+1, float(aValue), float(bValue), float(cValue), float(tValue))
+
+    if float(aValue) == 0:
+        print("WARNING: a=0 -> all keV will be 0 (curve_fit failed for this pixel)")
+    num_zeros = sum(1 for v in arrayx if v == 0)
+    if num_zeros > 0:
+        print("WARNING: keV=0 at", num_zeros, "points (calib_a has 0 for this pixel)")
 
   x = np.array(arrayx)
   y = np.array(arraySpocitany)
-  x2 = np.arange(1, MAX_TOT+1)
+  x2 = np.arange(1, len(arraySpocitany)+1) if riadokNaVypis != "" else np.arange(1, MAX_TOT+1)
   plt.ylabel("Početnosť")
-  plt.plot(x, y, color ="blue", label="Kalibrované [keV]")
+  plt.plot(x, y, color="blue", label="Kalibrované [keV]")
   if (riadokNaVypis == ""):
       plt.title("Spektrum všetkých pixelov")
       y = sumCalibrationData(inputFile)
   else:
       plt.title("Spektrum " + str(riadokNaVypis) + " pixela")
-  if (porovnanie): 
-      plt.plot(x2, y, color ="red", label="Nekalibrované ToT [ADU]")
+  if (porovnanie):
+      plt.plot(x2, y, color="red", label="Nekalibrované ToT [ADU]")
       plt.xlabel("Energia [keV] resp. ToT [ADU]")
   else:
       plt.xlabel("Energia [keV]")

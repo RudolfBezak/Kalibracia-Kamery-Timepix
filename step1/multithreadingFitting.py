@@ -48,10 +48,10 @@ def zapisCalibDoSuboru(priecinok):
         for i in range(len(arrayA)):
             riadokCislo += 1  # Zvýšenie počítadla riadkov
             # Zápis zaokrúhlených hodnôt do súborov
-            filea.write(str(round(arrayA[i], 4)) + " ")
-            fileb.write(str(round(arrayB[i], 4)) + " ")
-            filec.write(str(round(arrayC[i], 4)) + " ")
-            filet.write(str(round(arrayT[i], 4)) + " ")
+            filea.write(str(round(arrayA[i], 2)) + " ")
+            fileb.write(str(round(arrayB[i], 2)) + " ")
+            filec.write(str(round(arrayC[i], 2)) + " ")
+            filet.write(str(round(arrayT[i], 2)) + " ")
 
             if riadokCislo == RESOLUTION:
                 # Ak je počet riadkov rovný RESOLUTION, pridá nový riadok do súboru

@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 from americium4peaky import americium4peaky
+from settings_cache import get, set, get_initial_dir
 from custom_function import custom_function
 from multithreadingFitting import calibLine, multithreadingFitting, zapisCalibDoSuboru
 import printHistogramCalibrated
@@ -34,17 +35,16 @@ class Application(tk.Frame):
         self.file_text = tk.Label(self, text=".clog súbor:")
         self.file_text.grid(row=2, column=0)
 
-        # Create a label for displaying the dropped file name
-        self.file_label = tk.Label(self, text="zadaj sem súbor")
+        self.file_label = tk.Label(self, text=get("clog") or "zadaj sem súbor")
         self.file_label.grid(row=2, column=2)
 
-        # Bind drag and drop events
-        self.file_label.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_label))
+        self.file_label.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_label, "clog"))
 
         self.file_text1 = tk.Label(self, text="názov výstupného súboru:	")
         self.file_text1.grid(row=3, column=0)
 
         self.text_entry = tk.Entry(self)
+        self.text_entry.insert(0, get("output_name"))
         self.text_entry.grid(row=3, column=2)
 
         self.parseButton = tk.Button(self, text='spracuj', command=self.spracujButtonOnClick)
@@ -53,15 +53,33 @@ class Application(tk.Frame):
         self.file_text2 = tk.Label(self)
         self.file_text2.grid(row=5, column=1)
 
-    def openFileExplorer(self, event, button):
-        event.widget.focus_force()  # Give focus to the widget receiving the drop
-        file_path = filedialog.askopenfilename()  # Use filedialog to ask for file path
-        button.config(text=file_path)  # Update the file label with the dropped file path
-
-    def openFolderExplorer(self, event, button):
+    def openFileExplorer(self, event, button, setting_key=None, placeholder="zadaj sem súbor"):
+        if event.num == 3:
+            button.config(text=placeholder)
+            if setting_key:
+                set(setting_key, "")
+            return
         event.widget.focus_force()
-        folder_path = filedialog.askdirectory()
-        button.config(text=folder_path)
+        initialdir = get_initial_dir(setting_key) if setting_key else None
+        file_path = filedialog.askopenfilename(initialdir=initialdir)
+        if file_path:
+            button.config(text=file_path)
+            if setting_key:
+                set(setting_key, file_path)
+
+    def openFolderExplorer(self, event, button, setting_key=None, placeholder="zadaj sem priečinok"):
+        if event.num == 3:
+            button.config(text=placeholder)
+            if setting_key:
+                set(setting_key, "")
+            return
+        event.widget.focus_force()
+        initialdir = get_initial_dir(setting_key) if setting_key else None
+        folder_path = filedialog.askdirectory(initialdir=initialdir)
+        if folder_path:
+            button.config(text=folder_path)
+            if setting_key:
+                set(setting_key, folder_path)
 
     def spracujButtonOnClick(self):
         if (self.file_label.cget("text") == "Drop .clog file here" or self.file_label.cget("text").split(".")[-1] != "clog"):
@@ -72,6 +90,7 @@ class Application(tk.Frame):
             self.file_text2.config(text="Zlý výstupný súbor")
             print("No text entered")
             return
+        set("output_name", self.text_entry.get())
         rawDataToCalibrationData.rawDataToCalibrationData(self.file_label.cget("text"), self.text_entry.get(), self.file_text2)
 
     def renderRawDataWidget(self):
@@ -84,39 +103,35 @@ class Application(tk.Frame):
     def vytvorMiestoNaCalibSubory(self):
           self.file_text = tk.Label(self, text="calib_a.txt súbor:")
           self.file_text.grid(row=self.i, column=0)
-        
-          # Create a label for displaying the dropped file name
-          self.file_labela = tk.Label(self, text="zadaj sem calib_a subor")
+
+          self.file_labela = tk.Label(self, text=get("calib_a") or "zadaj sem calib_a subor")
           self.file_labela.grid(row=self.i, column=2)
 
-          self.file_labela.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labela))
+          self.file_labela.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labela, "calib_a", "zadaj sem calib_a subor"))
 
           self.file_text = tk.Label(self, text="calib_b.txt súbor:")
           self.file_text.grid(row=self.i+1, column=0)
 
-          # Create a label for displaying the dropped file name
-          self.file_labelb = tk.Label(self, text="zadaj sem calib_b subor")
+          self.file_labelb = tk.Label(self, text=get("calib_b") or "zadaj sem calib_b subor")
           self.file_labelb.grid(row=self.i+1, column=2)
 
-          self.file_labelb.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labelb))
+          self.file_labelb.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labelb, "calib_b", "zadaj sem calib_b subor"))
 
           self.file_text1 = tk.Label(self, text="calib_c.txt súbor:")
           self.file_text1.grid(row=self.i+2, column=0)
 
-          # Create a label for displaying the dropped file name
-          self.file_labelc = tk.Label(self, text="zadaj sem calib_c subor")
+          self.file_labelc = tk.Label(self, text=get("calib_c") or "zadaj sem calib_c subor")
           self.file_labelc.grid(row=self.i+2, column=2)
 
-          self.file_labelc.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labelc))
+          self.file_labelc.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labelc, "calib_c", "zadaj sem calib_c subor"))
 
           self.file_text1 = tk.Label(self, text="calib_t.txt súbor:")
           self.file_text1.grid(row=self.i+3, column=0)
 
-          # Create a label for displaying the dropped file name
-          self.file_labelt = tk.Label(self, text="zadaj sem calib_t subor")
+          self.file_labelt = tk.Label(self, text=get("calib_t") or "zadaj sem calib_t subor")
           self.file_labelt.grid(row=self.i+3, column=2)
 
-          self.file_labelt.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labelt))
+          self.file_labelt.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_labelt, "calib_t", "zadaj sem calib_t subor"))
 
     def histogramWidget(self):
         self.topRow()
@@ -126,11 +141,10 @@ class Application(tk.Frame):
         self.file_text = tk.Label(self, text=".totKanaly súbor:")
         self.file_text.grid(row=self.i, column=0)
 
-        # Create a label for displaying the dropped file name
-        self.file_label = tk.Label(self, text="zadaj sem súbor")
+        self.file_label = tk.Label(self, text=get("totkanaly") or "zadaj sem súbor")
         self.file_label.grid(row=self.i, column=2)
 
-        self.file_label.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_label))
+        self.file_label.bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.file_label, "totkanaly"))
 
         self.file_text1 = tk.Label(self, text="číslo pixela:	")
         self.file_text1.grid(row=self.i+1, column=0)
@@ -403,11 +417,10 @@ class Application(tk.Frame):
         self.file_text = tk.Label(self, text="prečinok na výstup:")
         self.file_text.grid(row=self.i, column=0)
 
-        # Create a label for displaying the dropped file name
-        self.file_label = tk.Label(self, text="zadaj sem priečinok")
+        self.file_label = tk.Label(self, text=get("output_folder") or "zadaj sem priečinok")
         self.file_label.grid(row=self.i, column=2)
 
-        self.file_label.bind("<ButtonRelease>", lambda event: self.openFolderExplorer(event, self.file_label))
+        self.file_label.bind("<ButtonRelease>", lambda event: self.openFolderExplorer(event, self.file_label, "output_folder"))
 
         self.parseButton = tk.Button(self, text='kalibruj', command=self.kalibrujOnClick)
 
@@ -421,11 +434,12 @@ class Application(tk.Frame):
         self.file_text = tk.Label(self, text=".totKanaly súbor:")
         self.file_text.grid(row=self.i, column=0)
 
-        self.labels.append(tk.Label(self, text="zadaj sem súbor"))
+        cached = get("totkanaly") if len(self.labels) == 0 else ""
+        self.labels.append(tk.Label(self, text=cached or "zadaj sem súbor"))
         j = len(self.labels) - 1
         self.labels[j].grid(row=self.i, column=2)
 
-        self.labels[j].bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.labels[j]))
+        self.labels[j].bind("<ButtonRelease>", lambda event: self.openFileExplorer(event, self.labels[j], "totkanaly"))
 
         self.file_text = tk.Label(self, text="Je to Amerícium?")
         self.file_text.grid(row=self.i+1, column=0) 

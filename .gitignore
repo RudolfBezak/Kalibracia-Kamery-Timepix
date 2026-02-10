@@ -40,7 +40,7 @@ step1/build/
 step1/dist/
 
 # Data files (uncomment if you don't want to track data)
-# *.clog
+*.clog
 # *.totKanaly
 # *.rudolf
 
@@ -60,3 +60,6 @@ htmlcov/
 *.tmp
 *.bak
 *.orig
+
+# UI settings cache
+step1/settings.json
