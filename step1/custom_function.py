@@ -16,12 +16,12 @@ def custom_function3(x, a, b, c, t):
         return ((x + a*t - b) / (2*a))
 
 
-def custom_function2(x, a, b, c, d):
+def custom_function2(x, a, b, c, t):
     """
     Converts TOT to Energy (keV) using the calibration formula:
     x = b + ax - c/(x - d)
     """
-    if (a == 0 and b == 0 and c == 0 and d == 0):
+    if (a == 0 and b == 0 and c == 0 and t == 0):
         return 0
     if a == 0:
         return 0
@@ -29,8 +29,8 @@ def custom_function2(x, a, b, c, d):
         return 0
     
     A = a
-    B = -(a * d + x - b)
-    C = d * (x - b) - c
+    B = -(a * t + x - b)
+    C = t * (x - b) - c
     
     discriminant = B**2 - 4 * A * C
     
