@@ -24,7 +24,7 @@ python UI.py
 
 ### Spustenie z exe súboru
 ```bash
-.\dist\ui.exe
+.\dist\calibration.exe
 ```
 
 ## Použitie
@@ -40,7 +40,7 @@ python UI.py
 pyinstaller UI.spec
 ```
 
-Výsledný súbor bude v `dist\ui.exe` (~70 MB).
+Výsledný súbor bude v `dist\calibration.exe` (~70 MB).
 
 ### Poznámky k buildovaniu
 - Spec súbor vylučuje veľké ML knižnice (torch, tensorflow, cv2, numba) pre menšiu veľkosť
