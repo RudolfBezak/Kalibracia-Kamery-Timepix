@@ -3,7 +3,7 @@ import math
 def custom_function(x, a, b, c, t):
     return (a * x) + b - (c / (x - t))
 
-def custom_function3(x, a, b, c, t, i = 0):
+def custom_function3(x, a, b, c, t):
     if (a == 0 and b == 0 and c == 0 and t == 0):
         return 0
     if a == 0:
@@ -16,7 +16,7 @@ def custom_function3(x, a, b, c, t, i = 0):
         return ((x + a*t - b) / (2*a))
 
 
-def custom_function2(x, a, b, c, d, i=0):
+def custom_function2(x, a, b, c, d):
     """
     Converts TOT to Energy (keV) using the calibration formula:
     x = b + ax - c/(x - d)
