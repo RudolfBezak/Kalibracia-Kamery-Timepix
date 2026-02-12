@@ -13,7 +13,7 @@ def load_config(filename):
                   key, value = line.split('=')
                   config[key.strip()] = int(value.strip())  # Convert the value to an integer
     except FileNotFoundError:
-        print(f'Súbor {filename} sa nenašiel, vytváram s predvolenými hodnotami')
+        print(f"[Konfigurácia] Súbor {filename} sa nenašiel, vytváram s predvolenými hodnotami")
         with open(filename, 'w') as file:
             for key, value in default_config.items():
                 file.write(f'{key} = {value}\n')

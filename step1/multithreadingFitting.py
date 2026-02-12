@@ -22,8 +22,7 @@ def calibLine(riadok):
     global arrayA, arrayB, arrayC, arrayT, x_data  # Použitie globálnych polí a dát
 
     if (tentoRiadokCislo % RESOLUTION) == 0:
-        # Ak je aktuálny riadok násobkom RESOLUTION, vypíše sa progres
-        print(round(tentoRiadokCislo / totalPixels * 100, 1), "%")
+        print(f"[Kalibrácia] {round(tentoRiadokCislo / totalPixels * 100, 1)}%")
     
     riadok.insert(0, 0)  # Pridanie 0 na začiatok riadku
     y_data = np.array(riadok)  # Konvertovanie riadku na numpy pole
@@ -36,9 +35,7 @@ def calibLine(riadok):
     arrayT[tentoRiadokCislo] = params[3]
 
 def zapisCalibDoSuboru(priecinok):
-    # Definovanie funkcie pre zápis kalibračných dát do súborov
-    print("zapis do suborov")
-    print(len(arrayA))  # Výpis počtu prvkov v arrayA
+    print(f"[Kalibrácia] Zapisujem do súborov ({len(arrayA)} pixelov)")
     riadokCislo = 0  # Inicializácia počítadla riadkov
 
     # Otvorenie štyroch súborov pre zápis

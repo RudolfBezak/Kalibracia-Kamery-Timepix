@@ -84,11 +84,11 @@ class Application(tk.Frame):
     def spracujButtonOnClick(self):
         if (self.file_label.cget("text") == "Drop .clog file here" or self.file_label.cget("text").split(".")[-1] != "clog"):
             self.file_text2.config(text="Zlý vstupný súbor")
-            print("No file selected")
+            print("[Chyba] Nebol vybraný žiadny .clog súbor")
             return
         if (self.text_entry.get() == ""):
             self.file_text2.config(text="Zlý výstupný súbor")
-            print("No text entered")
+            print("[Chyba] Nebol zadaný názov výstupného súboru")
             return
         set("output_name", self.text_entry.get())
         rawDataToCalibrationData.rawDataToCalibrationData(self.file_label.cget("text"), self.text_entry.get(), self.file_text2)
@@ -209,22 +209,22 @@ class Application(tk.Frame):
     def vykresliKalibKrivkyButtonOnClick(self):
         if (not (self.file_labela.cget("text").split(".")[-1] == "txt" )):
             self.file_text2.config(text="Zlý vstupný súbor")
-            print("No file selected")
+            print("[Chyba] Nebol vybraný calib_a.txt súbor")
             return
         
         if (not (self.file_labelb.cget("text").split(".")[-1] == "txt" )):
             self.file_text2.config(text="Zlý vstupný súbor")
-            print("No file selected")
+            print("[Chyba] Nebol vybraný calib_b.txt súbor")
             return
         
         if (not (self.file_labelc.cget("text").split(".")[-1] == "txt" )):
             self.file_text2.config(text="Zlý vstupný súbor")
-            print("No file selected")
+            print("[Chyba] Nebol vybraný calib_c.txt súbor")
             return
         
         if (not (self.file_labelt.cget("text").split(".")[-1] == "txt" )):
             self.file_text2.config(text="Zlý vstupný súbor")
-            print("No file selected")
+            print("[Chyba] Nebol vybraný calib_t.txt súbor")
             return
         
         i = -1
@@ -292,11 +292,10 @@ class Application(tk.Frame):
             filet.close()
 
             params = (float(a), float(b), float(c), float(t))
+            print(f"[Kalibračné krivky] Pixel {pixel.get()}: a={params[0]:.2f}, b={params[1]:.2f}, c={params[2]:.2f}, t={params[3]:.2f}")
 
             x_fit = np.linspace(THRESHOLD, MAX_TOT)
             y_fit = custom_function(x_fit, *params)
-
-            print(params)
             colors = ['red', 'blue', 'green', 'black', 'purple', 'orange',  'brown', 'cyan', 'pink', 'yellow']
             plt.plot(x_fit, y_fit, label='Pixel ' + pixel.get(), color=colors[i])
 
@@ -331,7 +330,7 @@ class Application(tk.Frame):
         kalibKrivy = True
         if ((self.file_label.cget("text") == "zadaj sem subor" or self.file_label.cget("text") == "") or not (self.file_label.cget("text").split(".")[-1] == "totKanaly" or self.file_label.cget("text").split(".")[-1] == "rudolf")):
             self.file_text2.config(text="Zlý vstupný súbor")
-            print("No file selected")
+            print("[Chyba] Nebol vybraný .totKanaly súbor pre histogram")
             return
       
         if (not (self.file_labela.cget("text").split(".")[-1] == "txt" )):
@@ -391,14 +390,13 @@ class Application(tk.Frame):
                         else:
                             casy.append(array[j].index(max(array[j])))
 
-        print("found peaks")
+        print("[Kalibrácia] Peaky zistené, spúšťam fitovanie")
 
         multithreadingFitting(casy, energie, self.file_label.cget("text"))
         
     def toggle(self, i, toggle_button):
 
         if self.toggle_states[i] == "Ano":
-            print(i)
             self.energie[i].grid(row=5+(4*i), column=2)
             self.toggle_states[i] = "Nie"
             toggle_button.config(text="Nie")

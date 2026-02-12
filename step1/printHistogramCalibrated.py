@@ -151,10 +151,10 @@ def printHistogramCalibrated(inputFile, riadokNaVypis, caliba, calibb, calibc, c
         arrayx[i] = custom_function2(i+1, float(aValue), float(bValue), float(cValue), float(tValue))
 
     if float(aValue) == 0:
-        print("WARNING: a=0 -> all keV will be 0 (curve_fit failed for this pixel)")
+        print("[Varovanie] a=0 pre tento pixel – všetky keV budú 0 (curve_fit zlyhal)")
     num_zeros = sum(1 for v in arrayx if v == 0)
     if num_zeros > 0:
-        print("WARNING: keV=0 at", num_zeros, "points (calib_a has 0 for this pixel)")
+        print(f"[Varovanie] keV=0 na {num_zeros} bodoch (calib_a má 0 pre tento pixel)")
 
   x = np.array(arrayx)
   y = np.array(arraySpocitany)

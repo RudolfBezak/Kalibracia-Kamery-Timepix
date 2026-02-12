@@ -13,11 +13,11 @@ PERCENT_VYPIS = 5
 
 def rawDataToCalibrationData(inputFile, outputFile, textOutput):
 
-  print("start")
+  print("[Spracovanie] Štart")
   textOutput.config(text="start")
 
   pocetRiadkov = countLines(inputFile)
-  print("subor ma",pocetRiadkov,"riadkov")
+  print(f"[Spracovanie] Súbor má {pocetRiadkov} riadkov")
   textOutput.config(text="subor ma" + str(pocetRiadkov) + "riadkov")
   pocetRiadkovNaPercenta = round(pocetRiadkov/(100/PERCENT_VYPIS))
 
@@ -25,19 +25,19 @@ def rawDataToCalibrationData(inputFile, outputFile, textOutput):
   def toCalibration(fileAdress):
     file = open(fileAdress, 'r', encoding='utf-8')
 
-    print("alokacia",256*256,"x",MAX_TOT,"pola")
+    print(f"[Spracovanie] Alokácia {256*256} x {MAX_TOT} poľa")
     result = [[0]*MAX_TOT for i in range(256*256)]
 
     riadokNaProgress = 0 
     percenta = 0
     # prejdi vsetky riadky
-    print("start raw -> array")
+    print("[Spracovanie] Konverzia raw -> pole")
     for line in file:
       # print(line)
       if (riadokNaProgress == pocetRiadkovNaPercenta):
         riadokNaProgress = 0
         percenta = percenta + 5
-        print(percenta,"%")
+        print(f"[Spracovanie] {percenta}%")
         textOutput.config(text=str(percenta) + "%")
       riadokNaProgress += 1
 
@@ -61,12 +61,12 @@ def rawDataToCalibrationData(inputFile, outputFile, textOutput):
               result[riadok][stlpec-1] += 1
 
     file.close()
-    print("end raw -> array")
+    print("[Spracovanie] Konverzia dokončená")
     return result
 
     #kalibracne data do suboru
   def calibrationToFile(calibrationData):
-    print("zapisujem vystup do suboru")
+    print("[Spracovanie] Zapisujem výstup do súboru")
     file = open(f"" + outputFile +".totKanaly", 'w', encoding='utf-8')
 
     for riadok in calibrationData:
@@ -76,11 +76,11 @@ def rawDataToCalibrationData(inputFile, outputFile, textOutput):
       file.write("\n")
 
     file.close()
-    print("zapisane do suboru")
+    print("[Spracovanie] Zápis dokončený")
     return
 
   calibrationToFile(toCalibration(inputFile))
   textOutput.config(text="done")
-  print("done")
+  print("[Spracovanie] Hotovo")
 
 # rawDataToCalibrationData()
