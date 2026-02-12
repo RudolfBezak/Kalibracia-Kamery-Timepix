@@ -1,38 +1,38 @@
 import numpy as np
 from scipy.optimize import curve_fit
 import concurrent.futures
+import os
 
 from custom_function import custom_function
 from globals import RESOLUTION, THRESHOLD
 
-# Inicializácia premenných a polí
-riadokCislo = 0
-totalPixels = RESOLUTION * RESOLUTION  # Celkový počet pixelov na spracovanie
-arrayA = [0] * (RESOLUTION * RESOLUTION)  # Pole pre hodnoty parametra A
-arrayB = [0] * (RESOLUTION * RESOLUTION)  # Pole pre hodnoty parametra B
-arrayC = [0] * (RESOLUTION * RESOLUTION)  # Pole pre hodnoty parametra C
-arrayT = [0] * (RESOLUTION * RESOLUTION)  # Pole pre hodnoty parametra T
-x_data = []  # Pole pre hodnoty x, ktoré sa budú používať pri fitovaní
+arrayA = [0] * (RESOLUTION * RESOLUTION)
+arrayB = [0] * (RESOLUTION * RESOLUTION)
+arrayC = [0] * (RESOLUTION * RESOLUTION)
+arrayT = [0] * (RESOLUTION * RESOLUTION)
 
-def calibLine(riadok):
-    # Definovanie funkcie na kalibráciu jedného riadku
-    global riadokCislo, totalPixels  # Globálna premenná pre sledovanie aktuálneho riadku
-    tentoRiadokCislo = riadokCislo  # Uloženie aktuálneho čísla riadku
-    riadokCislo += 1  # Zvýšenie čísla riadku pre ďalšie volanie funkcie
-    global arrayA, arrayB, arrayC, arrayT, x_data  # Použitie globálnych polí a dát
+_worker_x_data = None
 
-    if (tentoRiadokCislo % RESOLUTION) == 0:
-        print(f"[Kalibrácia] {round(tentoRiadokCislo / totalPixels * 100, 1)}%")
-    
-    riadok.insert(0, 0)  # Pridanie 0 na začiatok riadku
-    y_data = np.array(riadok)  # Konvertovanie riadku na numpy pole
+def _init_worker(x_data):
+    global _worker_x_data
+    _worker_x_data = np.array(x_data)
 
-    # Fitovanie dát na základe custom_function a ukladanie parametrov do príslušných polí
-    params, _ = curve_fit(custom_function, x_data, y_data, maxfev=1000000, bounds=([0, -np.inf, -np.inf, 0], [np.inf, np.inf, np.inf, THRESHOLD]))
-    arrayA[tentoRiadokCislo] = params[0]
-    arrayB[tentoRiadokCislo] = params[1]
-    arrayC[tentoRiadokCislo] = params[2]
-    arrayT[tentoRiadokCislo] = params[3]
+def _calibLineWorker(item):
+    idx, riadok = item
+    global _worker_x_data
+    if riadok is None:
+        row = [0]
+    elif isinstance(riadok, (int, float)):
+        row = [0, float(riadok)]
+    else:
+        row = [0] + [float(x) if x is not None else 0 for x in riadok]
+    y_data = np.array(row)
+    params, _ = curve_fit(
+        custom_function, _worker_x_data, y_data,
+        maxfev=1000000,
+        bounds=([0, -np.inf, -np.inf, 0], [np.inf, np.inf, np.inf, THRESHOLD])
+    )
+    return (idx, params)
 
 def zapisCalibDoSuboru(priecinok):
     print(f"[Kalibrácia] Zapisujem do súborov ({len(arrayA)} pixelov)")
@@ -58,15 +58,42 @@ def zapisCalibDoSuboru(priecinok):
                 filec.write("\n")
                 filet.write("\n")
   
-def multithreadingFitting(casy, x_dataVstup, vystupnySuborCesta):
-  # Definovanie funkcie pre paralelné fitovanie viacerých riadkov
-  global x_data, riadokCislo, totalPixels  # Použitie globálnej premenná x_data a riadokCislo
-  x_data = x_dataVstup  # Nastavenie vstupných dát pre x
-  riadokCislo = 0  # Reset počítadla pre progress bar
-  totalPixels = len(casy)  # Nastavenie celkového počtu pixelov na základe dĺžky vstupných dát
+def multithreadingFitting(casy, x_dataVstup, vystupnySuborCesta, progress_callback=None, stop_event=None):
+  totalPixels = len(casy)
+  n_workers = min(os.cpu_count() or 4, totalPixels)
 
-  # Použitie ThreadPoolExecutor pre paralelné spracovanie riadkov
-  with concurrent.futures.ThreadPoolExecutor() as executor:
-      executor.map(calibLine, casy)  # Mapovanie funkcie calibLine na každý riadok v casy
+  if progress_callback:
+      progress_callback(0)
+  executor = concurrent.futures.ProcessPoolExecutor(
+      max_workers=n_workers,
+      initializer=_init_worker,
+      initargs=(x_dataVstup,)
+  )
+  try:
+      work_items = list(enumerate(casy))
+      chunk = max(64, totalPixels // (n_workers * 32))
+      results = executor.map(_calibLineWorker, work_items, chunksize=chunk)
+      last_percent = -1
+      stopped = False
+      for idx, (i, params) in enumerate(results):
+          if stop_event and stop_event.is_set():
+              stopped = True
+              break
+          completed = idx + 1
+          percent = int(completed / totalPixels * 100)
+          if percent > last_percent:
+              last_percent = percent
+              if progress_callback:
+                  progress_callback(percent)
+              print(f"[Kalibrácia] {percent}%")
+          arrayA[i] = params[0]
+          arrayB[i] = params[1]
+          arrayC[i] = params[2]
+          arrayT[i] = params[3]
 
-  zapisCalibDoSuboru(vystupnySuborCesta)  # Zavolanie funkcie pre zápis výsledkov do súborov
+      if not stopped and progress_callback:
+          progress_callback(100)
+      if not stopped:
+          zapisCalibDoSuboru(vystupnySuborCesta)
+  finally:
+      executor.shutdown(wait=not (stop_event and stop_event.is_set()))

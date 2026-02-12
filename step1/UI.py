@@ -1,9 +1,10 @@
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, ttk
+import threading
 from americium4peaky import americium4peaky
 from settings_cache import get, set, get_initial_dir
 from custom_function import custom_function
-from multithreadingFitting import calibLine, multithreadingFitting, zapisCalibDoSuboru
+from multithreadingFitting import multithreadingFitting, zapisCalibDoSuboru
 import printHistogramCalibrated
 import rawDataToCalibrationData
 import printHistogram
@@ -12,10 +13,22 @@ import numpy as np
 from globals import MAX_TOT, RESOLUTION, THRESHOLD
 
 class Application(tk.Frame):
+    _stop_event = None
+    _calib_thread = None
 
     def __init__(self, root=None):
         tk.Frame.__init__(self, root)
         self.grid()
+        if Application._stop_event is None:
+            Application._stop_event = threading.Event()
+        root = self.winfo_toplevel()
+        root.protocol("WM_DELETE_WINDOW", self._on_close)
+
+    def _on_close(self):
+        Application._stop_event.set()
+        if Application._calib_thread and Application._calib_thread.is_alive():
+            Application._calib_thread.join(timeout=3)
+        self.winfo_toplevel().destroy()
 
     def topRow(self):
         self.master.title('Timepix Kalibrácia')
@@ -359,40 +372,80 @@ class Application(tk.Frame):
 
     def kalibrujOnClick(self):
         energie = [THRESHOLD]
-        casy = []
+        file_data = []
 
         for i in range(len(self.labels)):
-            if (self.labels[i].cget("text") == "zadaj sem subor"):
+            file_path = self.labels[i].cget("text").strip()
+            if not file_path or file_path in ("zadaj sem subor", "zadaj sem súbor"):
                 continue
 
             if (self.toggle_states[i] == "Ano"):
-                energie.append(17.7)
-                energie.append(20.7)
-                energie.append(26.3)
-                energie.append(59.5)
+                file_energies = [17.7, 20.7, 26.3, 59.5]
+                energie.extend(file_energies)
                 array = americium4peaky(self.labels[i].cget("text"))
-                for j in range(len(array)):
-                    casy.append(array[j])
+                file_data.append(("am", file_energies, array))
             else:
-                energie.append(float(self.energie[i].get()))
+                energy_str = self.energie[i].get().strip()
+                if not energy_str:
+                    continue
+                try:
+                    e = float(energy_str)
+                except ValueError:
+                    continue
+                energie.append(e)
                 with open(self.labels[i].cget("text"), 'r', encoding='utf-8') as file:
                     array = []
                     for line in file:
-                        riadok = line.strip()
-                        riadok = riadok.split(" ")
-                        for i in range(len(riadok)):
-                            riadok[i] = int(riadok[i])
+                        riadok = line.strip().split(" ")
+                        riadok = [float(x) if "." in str(x) else int(x) for x in riadok if x]
                         array.append(riadok)
-
+                    tots = []
                     for j in range(len(array)):
                         if max(array[j]) == 0:
-                            casy.append(None)
+                            tots.append(None)
                         else:
-                            casy.append(array[j].index(max(array[j])))
+                            tots.append(array[j].index(max(array[j])))
+                    file_data.append(("single", [e], tots))
 
+        n_pixels = len(file_data[0][2]) if file_data else 0
+        casy = []
+        for j in range(n_pixels):
+            row = []
+            for kind, en_list, data in file_data:
+                if kind == "am":
+                    row.extend([float(x) if x is not None else 0 for x in data[j]])
+                else:
+                    v = data[j]
+                    row.append(float(v) if v is not None else 0)
+            casy.append(row)
+
+        if not casy:
+            self.file_text2.config(text="Pridajte aspoň jeden platný súbor")
+            return
         print("[Kalibrácia] Peaky zistené, spúšťam fitovanie")
+        self.progress_bar['value'] = 0
+        self.parseButton.config(state='disabled')
+        self.file_text2.config(text="Kalibrácia...")
 
-        multithreadingFitting(casy, energie, self.file_label.cget("text"))
+        def run_calibration():
+            def on_progress(percent):
+                def _update():
+                    if not Application._stop_event.is_set():
+                        self.progress_bar.config(value=percent)
+                self.master.after(0, _update)
+
+            try:
+                Application._stop_event.clear()
+                multithreadingFitting(casy, energie, self.file_label.cget("text"), progress_callback=on_progress, stop_event=Application._stop_event)
+                self.master.after(0, lambda: (Application._stop_event.is_set() or self.file_text2.config(text="Hotovo")))
+            except Exception as e:
+                self.master.after(0, lambda: (Application._stop_event.is_set() or self.file_text2.config(text=f"Chyba: {e}")))
+                print(f"[Chyba] {e}")
+            finally:
+                self.master.after(0, lambda: (Application._stop_event.is_set() or self.parseButton.config(state='normal')))
+
+        Application._calib_thread = threading.Thread(target=run_calibration, daemon=True)
+        Application._calib_thread.start()
         
     def toggle(self, i, toggle_button):
 
@@ -426,6 +479,7 @@ class Application(tk.Frame):
 
         self.i = self.i + 2
         self.file_text2 = tk.Label(self)
+        self.progress_bar = ttk.Progressbar(self, length=300, mode='determinate')
         self.pridajRadKalibracnychSuborov()
         
     def pridajRadKalibracnychSuborov(self):
@@ -453,8 +507,8 @@ class Application(tk.Frame):
         
         self.parseButton.grid(row=self.i+2, column=1)
         self.pridajRad.grid(row=self.i+2, column=0)
-        
-        self.file_text2.grid(row=self.i+3, column=1)
+        self.progress_bar.grid(row=self.i+3, column=0, columnspan=3, sticky='ew', padx=5, pady=2)
+        self.file_text2.grid(row=self.i+4, column=1)
 
         self.i = self.i + 4
         
@@ -475,13 +529,13 @@ class Application(tk.Frame):
         self.file_text2.grid(row=len(self.labels) + 5, column=1)
 
     def renderCalibrationWidget(self):
-        # Destroy the current frame
         self.destroy()
         new_app = Application()
         new_app.calibrationWidget()
         new_app.mainloop()
-         
 
-app = Application()
-app.rawDataWidget()
-app.mainloop()
+
+if __name__ == "__main__":
+    app = Application()
+    app.rawDataWidget()
+    app.mainloop()
