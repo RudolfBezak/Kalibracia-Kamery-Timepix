@@ -1,4 +1,10 @@
 import os
+import sys
+
+def get_base_path():
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
 
 def load_config(filename):
     default_config = {
@@ -28,7 +34,7 @@ def load_config(filename):
     
     return config
 
-_config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.txt')
+_config_path = os.path.join(get_base_path(), 'config.txt')
 config = load_config(_config_path)
 
 print(f"[Konfigurácia] Nacitane z {_config_path}: MAX_TOT={config['MAX_TOT']}, THRESHOLD={config['THRESHOLD']}, RESOLUTION={config['RESOLUTION']}, DEBUG_MODE={config['DEBUG_MODE']}")

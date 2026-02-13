@@ -1,7 +1,13 @@
 import json
 import os
+import sys
 
-_SETTINGS_PATH = os.path.join(os.path.dirname(__file__), "settings.json")
+def _get_base_path():
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
+
+_SETTINGS_PATH = os.path.join(_get_base_path(), "settings.json")
 
 _DEFAULTS = {
     "totkanaly": "",
