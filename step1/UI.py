@@ -25,6 +25,8 @@ class Application(tk.Frame):
         root.protocol("WM_DELETE_WINDOW", self._on_close)
 
     def _on_close(self):
+        if hasattr(self, '_save_calibration_curves_state') and hasattr(self, 'overlay_files'):
+            self._save_calibration_curves_state()
         Application._stop_event.set()
         if Application._calib_thread and Application._calib_thread.is_alive():
             Application._calib_thread.join(timeout=3)
@@ -118,7 +120,8 @@ class Application(tk.Frame):
         rawDataToCalibrationData.rawDataToCalibrationData(self.file_label.cget("text"), self.text_entry.get(), self.file_text2)
 
     def renderRawDataWidget(self):
-        # Destroy the current frame
+        if hasattr(self, 'overlay_files'):
+            self._save_calibration_curves_state()
         self.destroy()
         new_app = Application()
         new_app.rawDataWidget()
@@ -214,12 +217,15 @@ class Application(tk.Frame):
             path = file_lbl.cget("text").strip() or ""
             if self._is_placeholder_path(path):
                 continue
+            energy = energy_entry.get().strip() if not is_am[0] else ""
+            if not is_am[0] and not energy:
+                continue
             overlay_files.append({
                 "path": path,
                 "americium": bool(is_am[0]),
-                "energy": energy_entry.get().strip() if not is_am[0] else ""
+                "energy": energy
             })
-        curve_pixels = [p.get().strip() for p in self.pixely]
+        curve_pixels = [p.get().strip() for p in self.pixely if p.get().strip()]
         hist_pixel = self.text_entrypixel.get().strip() if hasattr(self, 'text_entrypixel') else ""
         set_calibration_curves_data({
             "hist_pixel": hist_pixel,
@@ -482,7 +488,8 @@ class Application(tk.Frame):
             printHistogram.printHistogramFromLineOfData(self.file_label.cget("text"), self.text_entrypixel.get())
 
     def renderHistogramWidget(self):
-        # Destroy the current frame
+        if hasattr(self, 'overlay_files'):
+            self._save_calibration_curves_state()
         self.destroy()
         new_app = Application()
         new_app.histogramWidget()
@@ -675,6 +682,8 @@ class Application(tk.Frame):
         self.file_text2.grid(row=len(self.labels) + 5, column=1)
 
     def renderCalibrationWidget(self):
+        if hasattr(self, 'overlay_files'):
+            self._save_calibration_curves_state()
         self.destroy()
         new_app = Application()
         new_app.calibrationWidget()
