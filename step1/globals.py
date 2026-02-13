@@ -1,8 +1,11 @@
+import os
+
 def load_config(filename):
     default_config = {
         'MAX_TOT': 100,
         'THRESHOLD': 6,
-        'RESOLUTION': 256
+        'RESOLUTION': 256,
+        'DEBUG_MODE': 0
     }
     config = {}
     try:
@@ -25,8 +28,12 @@ def load_config(filename):
     
     return config
 
-config = load_config('config.txt')
+_config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.txt')
+config = load_config(_config_path)
+
+print(f"[Konfigurácia] Nacitane z {_config_path}: MAX_TOT={config['MAX_TOT']}, THRESHOLD={config['THRESHOLD']}, RESOLUTION={config['RESOLUTION']}, DEBUG_MODE={config['DEBUG_MODE']}")
 
 MAX_TOT = config['MAX_TOT']
 THRESHOLD = config['THRESHOLD']
 RESOLUTION = config['RESOLUTION']
+DEBUG_MODE = config['DEBUG_MODE']

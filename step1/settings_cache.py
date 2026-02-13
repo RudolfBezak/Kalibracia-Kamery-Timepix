@@ -12,6 +12,8 @@ _DEFAULTS = {
     "clog": "",
     "output_folder": "",
     "output_name": "",
+    "calibration_data": None,
+    "calibration_curves_data": None,
 }
 
 def _load():
@@ -41,3 +43,25 @@ def get_initial_dir(key):
     if path and os.path.isdir(path):
         return path
     return None
+
+def get_calibration_data():
+    data = _load().get("calibration_data")
+    if data and isinstance(data, dict) and "files" in data:
+        return data
+    return {"output_folder": get("output_folder") or "", "files": []}
+
+def set_calibration_data(data):
+    d = _load()
+    d["calibration_data"] = data
+    _save(d)
+
+def get_calibration_curves_data():
+    data = _load().get("calibration_curves_data")
+    if data and isinstance(data, dict):
+        return data
+    return {"hist_pixel": "", "curve_pixels": [], "overlay_files": [{"path": "", "americium": False, "energy": ""}]}
+
+def set_calibration_curves_data(data):
+    d = _load()
+    d["calibration_curves_data"] = data
+    _save(d)
